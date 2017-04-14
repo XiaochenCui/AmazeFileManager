@@ -88,20 +88,6 @@
 
         </activity>
 
-        <activity
-            android:label="@string/databasereader"
-            android:name=".activities.DbViewer"
-            android:theme="@style/appCompatLight"
-            android:screenOrientation="locked">
-            <intent-filter
-                android:label="Amaze Database Reader">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="db/*" />
-            </intent-filter>
-
-        </activity>
-
         <service
 			android:name = ".services.ExtractService"
 			android:label = "Extracting"

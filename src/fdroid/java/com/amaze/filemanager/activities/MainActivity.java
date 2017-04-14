@@ -516,11 +516,12 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
 
     /**
      * Method finds whether a USB device is connected or not
+     *
      * @return true if device is connected
      */
     private boolean isUsbDeviceConnected() {
         UsbManager usbManager = (UsbManager) getSystemService(USB_SERVICE);
-        if (usbManager.getDeviceList().size()!=0) {
+        if (usbManager.getDeviceList().size() != 0) {
             // we need to set this every time as there is no way to know that whether USB device was
             // disconnected after closing the app and another one was connected
             // in that case the uri will obviously change
@@ -720,13 +721,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         setActionBarTitle(null);
         floatingActionButton.setVisibility(View.VISIBLE);
         floatingActionButton.showMenuButton(true);
-        if (openzip && zippath != null) {
-            if (zippath.endsWith(".zip") || zippath.endsWith(".apk")) openZip(zippath);
-            else {
-                openRar(zippath);
-            }
-            zippath = null;
-        }
     }
 
     public void selectItem(final int i) {
@@ -1024,7 +1018,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                                 arrayList);
                     }
                 } else if (path.contains("otg:/")) {
-                    if (COPY_PATH!=null) {
+                    if (COPY_PATH != null) {
 
                         arrayList = COPY_PATH;
                         Intent intent = new Intent(con, CopyService.class);
@@ -1033,10 +1027,10 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                         intent.putExtra(CopyService.TAG_COPY_OPEN_MODE, ma.openMode.ordinal());
 
                         ServiceWatcherUtil.runService(mainActivity, intent);
-                    } else if (MOVE_PATH!=null){
+                    } else if (MOVE_PATH != null) {
 
                         arrayList = MOVE_PATH;
-                        new MoveFiles(arrayList, ma, ma.getActivity(),ma.openMode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                        new MoveFiles(arrayList, ma, ma.getActivity(), ma.openMode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
                     }
                 }
                 COPY_PATH = null;
@@ -2256,10 +2250,10 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     }
 
     public void renameBookmark(final String title, final String path) {
-        if (DataUtils.containsBooks(new String[]{title,path}) != -1 || DataUtils.containsAccounts(new String[]{title,path}) != -1) {
-            RenameBookmark renameBookmark=RenameBookmark.getInstance(title,path,BaseActivity.accentSkin);
-            if(renameBookmark!=null){
-                renameBookmark.show(getFragmentManager(),"renamedialog");
+        if (DataUtils.containsBooks(new String[]{title, path}) != -1 || DataUtils.containsAccounts(new String[]{title, path}) != -1) {
+            RenameBookmark renameBookmark = RenameBookmark.getInstance(title, path, BaseActivity.accentSkin);
+            if (renameBookmark != null) {
+                renameBookmark.show(getFragmentManager(), "renamedialog");
             }
         }
     }
@@ -2325,28 +2319,15 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             transaction.commitAllowingStateLoss();
             supportInvalidateOptionsMenu();
         } else if (intent.getAction() != null) {
+            // file picker intent
+            mReturnIntent = true;
+            Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
 
-            if (intent.getAction().equals(Intent.ACTION_GET_CONTENT)) {
-
-                // file picker intent
-                mReturnIntent = true;
-                Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-            } else if (intent.getAction().equals(RingtoneManager.ACTION_RINGTONE_PICKER)) {
-                // ringtone picker intent
-                mReturnIntent = true;
-                mRingtonePickerIntent = true;
-                Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-            } else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
-                // zip viewer intent
-                Uri uri = intent.getData();
-                zippath = uri.toString();
-                openZip(zippath);
-            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
                 if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-                    if (Sp.getString(KEY_PREF_OTG, null)==null) {
+                    if (Sp.getString(KEY_PREF_OTG, null) == null) {
                         Sp.edit().putString(KEY_PREF_OTG, VALUE_PREF_OTG_NULL).apply();
                         updateDrawer();
                     }

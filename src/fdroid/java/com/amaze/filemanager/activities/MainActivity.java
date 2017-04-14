@@ -505,8 +505,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         }
         if (BaseActivity.rootMode)
             rv.add("/");
-        File usb = getUsbDrive();
-        if (usb != null && !rv.contains(usb.getPath())) rv.add(usb.getPath());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isUsbDeviceConnected()) rv.add("otg:/");
@@ -1317,18 +1315,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             tabFragment.updatepaths(pos);
     }
 
-    public void openZip(String path) {
-        findViewById(R.id.lin).animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom);
-        Bundle bundle = new Bundle();
-        bundle.putString("path", path);
-        fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    public void openRar(String path) {
-    }
-
     public TabFragment getFragment() {
         Fragment fragment = getDFragment();
         if (fragment == null) return null;
@@ -1347,27 +1333,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         getFragment().mViewPager.setPagingEnabled(b);
     }
 
-    public File getUsbDrive() {
-        File parent;
-        parent = new File("/storage");
-
-        try {
-            for (File f : parent.listFiles()) {
-                if (f.exists() && f.getName().toLowerCase().contains("usb") && f.canExecute()) {
-                    return f;
-                }
-            }
-        } catch (Exception e) {
-        }
-        parent = new File("/mnt/sdcard/usbStorage");
-        if (parent.exists() && parent.canExecute())
-            return (parent);
-        parent = new File("/mnt/sdcard/usb_storage");
-        if (parent.exists() && parent.canExecute())
-            return parent;
-
-        return null;
-    }
 
     public void refreshDrawer() {
         List<String> val = DataUtils.getStorages();

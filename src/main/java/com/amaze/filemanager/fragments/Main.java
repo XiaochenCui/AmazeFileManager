@@ -272,7 +272,7 @@ public class Main extends android.support.v4.app.Fragment {
         mFullPath = (TextView) getActivity().findViewById(R.id.fullpath);
         itemsstring = res.getString(R.string.items);
         apk = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.ic_doc_apk_grid));
-        mToolbarContainer.setBackgroundColor(MainActivity.currentTab==1 ? skinTwoColor : skin_color);
+        mToolbarContainer.setBackgroundColor(MainActivity.currentTab == 1 ? skinTwoColor : skin_color);
         //   listView.setPadding(listView.getPaddingLeft(), paddingTop, listView.getPaddingRight(), listView.getPaddingBottom());
         return rootView;
     }
@@ -294,7 +294,8 @@ public class Main extends android.support.v4.app.Fragment {
         COLORISE_ICONS = Sp.getBoolean("coloriseIcons", true);
         mFolderBitmap = BitmapFactory.decodeResource(res, R.drawable.ic_grid_folder_new);
         goback = res.getString(R.string.goback);
-        folder = new BitmapDrawable(res, mFolderBitmap);;
+        folder = new BitmapDrawable(res, mFolderBitmap);
+        ;
         getSortModes();
         DARK_IMAGE = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.ic_doc_image_dark));
         DARK_VIDEO = new BitmapDrawable(res, BitmapFactory.decodeResource(res, R.drawable.ic_doc_video_dark));
@@ -304,9 +305,10 @@ public class Main extends android.support.v4.app.Fragment {
         MAIN_ACTIVITY.initiatebbar();
         ic = new IconHolder(getActivity(), SHOW_THUMBS, !IS_LIST);
 
-        if (utilsProvider.getAppTheme().equals(AppTheme.LIGHT) && !IS_LIST)  listView.setBackgroundColor(getResources()
-                .getColor(R.color.grid_background_light));
-        else    listView.setBackgroundDrawable(null);
+        if (utilsProvider.getAppTheme().equals(AppTheme.LIGHT) && !IS_LIST)
+            listView.setBackgroundColor(getResources()
+                    .getColor(R.color.grid_background_light));
+        else listView.setBackgroundDrawable(null);
 
         listView.setHasFixedSize(true);
         columns = Integer.parseInt(Sp.getString("columns", "-1"));
@@ -790,7 +792,7 @@ public class Main extends android.support.v4.app.Fragment {
             else adapter.toggleChecked(false);
             MAIN_ACTIVITY.setPagingEnabled(true);
 
-            MAIN_ACTIVITY.updateViews(new ColorDrawable(MainActivity.currentTab==1 ?
+            MAIN_ACTIVITY.updateViews(new ColorDrawable(MainActivity.currentTab == 1 ?
                     skinTwoColor : skin_color));
 
             if (!MAIN_ACTIVITY.isDrawerLocked) {
@@ -814,7 +816,8 @@ public class Main extends android.support.v4.app.Fragment {
 
     /**
      * method called when list item is clicked in the adapter
-     * @param position the {@link int} position of the list item
+     *
+     * @param position  the {@link int} position of the list item
      * @param imageView the check {@link RoundedImageView} that is to be animated
      */
     public void onListItemClicked(int position, ImageView imageView) {
@@ -857,7 +860,7 @@ public class Main extends android.support.v4.app.Fragment {
             if (!LIST_ELEMENTS.get(position).getSize().equals(goback)) {
 
                 // hiding search view if visible
-                if (MainActivity.isSearchViewEnabled)   MAIN_ACTIVITY.hideSearchView();
+                if (MainActivity.isSearchViewEnabled) MAIN_ACTIVITY.hideSearchView();
 
                 String path;
                 Layoutelements l = LIST_ELEMENTS.get(position);
@@ -883,8 +886,7 @@ public class Main extends android.support.v4.app.Fragment {
 
                         utils.openFile(RootHelper.getDocumentFile(l.getDesc(), getContext(), false),
                                 (MainActivity) getActivity());
-                    }
-                    else if (MAIN_ACTIVITY.mReturnIntent) {
+                    } else if (MAIN_ACTIVITY.mReturnIntent) {
                         returnIntentResults(new File(l.getDesc()));
                     } else {
 
@@ -982,12 +984,13 @@ public class Main extends android.support.v4.app.Fragment {
 
     /**
      * Loading adapter after getting a list of elements
-     * @param bitmap the list of objects for the adapter
+     *
+     * @param bitmap   the list of objects for the adapter
      * @param back
-     * @param path the path for the adapter
+     * @param path     the path for the adapter
      * @param openMode the type of file being created
-     * @param results is the list of elements a result from search
-     * @param grid whether to set grid view or list view
+     * @param results  is the list of elements a result from search
+     * @param grid     whether to set grid view or list view
      */
     public void createViews(ArrayList<Layoutelements> bitmap, boolean back, String path, OpenMode
             openMode, boolean results, boolean grid) {
@@ -1091,6 +1094,7 @@ public class Main extends android.support.v4.app.Fragment {
 
     /**
      * Show dialog to rename a file
+     *
      * @param f the file to rename
      */
     public void rename(final BaseFile f) {
@@ -1176,7 +1180,7 @@ public class Main extends android.support.v4.app.Fragment {
             // case when we had pressed on an item from search results and wanna go back
             // leads to resuming the search task
 
-            if (MainActivityHelper.SEARCH_TEXT!=null) {
+            if (MainActivityHelper.SEARCH_TEXT != null) {
 
                 // starting the search query again :O
                 MAIN_ACTIVITY.mainFragment = (Main) MAIN_ACTIVITY.getFragment().getTab();
@@ -1215,8 +1219,8 @@ public class Main extends android.support.v4.app.Fragment {
                 MAIN_ACTIVITY.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int i=-1;
-                        if((i=DataUtils.containsServer(smbPath))!=-1){
+                        int i = -1;
+                        if ((i = DataUtils.containsServer(smbPath)) != -1) {
                             MAIN_ACTIVITY.showSMBDialog(DataUtils.getServers().get(i)[0], smbPath, true);
                         }
                     }
@@ -1267,7 +1271,7 @@ public class Main extends android.support.v4.app.Fragment {
      * Assigns sort modes
      * A value from 0 to 3 defines sort mode as name/last modified/size/type in ascending order
      * Values from 4 to 7 defines sort mode as name/last modified/size/type in descending order
-     *
+     * <p>
      * Final value of {@link #sortby} varies from 0 to 3
      */
     public void getSortModes() {

@@ -45,7 +45,6 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.provider.DocumentFile;
@@ -61,12 +60,10 @@ import com.afollestad.materialdialogs.Theme;
 import com.amaze.filemanager.R;
 import com.amaze.filemanager.activities.BaseActivity;
 import com.amaze.filemanager.activities.MainActivity;
-import com.amaze.filemanager.adapters.HiddenAdapter;
 import com.amaze.filemanager.exceptions.RootNotPermittedException;
 import com.amaze.filemanager.filesystem.BaseFile;
 import com.amaze.filemanager.filesystem.HFile;
 import com.amaze.filemanager.filesystem.RootHelper;
-import com.amaze.filemanager.fragments.AppsList;
 import com.amaze.filemanager.fragments.Main;
 import com.amaze.filemanager.services.asynctasks.GenerateMD5Task;
 import com.amaze.filemanager.ui.Layoutelements;
@@ -1052,45 +1049,6 @@ public class Futils {
                 m.Sp.edit().putString("sortby", "" + which).commit();
                 m.getSortModes();
                 m.updateList();
-                dialog.dismiss();
-            }
-        });
-        a.title(R.string.sortby);
-        a.build().show();
-    }
-
-    public void showSortDialog(final AppsList m, AppTheme appTheme) {
-        String[] sort = m.getResources().getStringArray(R.array.sortbyApps);
-        int current = Integer.parseInt(m.Sp.getString("sortbyApps", "0"));
-        MaterialDialog.Builder a = new MaterialDialog.Builder(m.getActivity());
-        a.theme(appTheme.getMaterialDialogTheme());
-        a.items(sort).itemsCallbackSingleChoice(current > 2 ? current - 3 : current, new MaterialDialog.ListCallbackSingleChoice() {
-            @Override
-            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-
-                return true;
-            }
-        });
-        a.positiveText(R.string.ascending).positiveColor(Color.parseColor(BaseActivity.accentSkin));
-        a.negativeText(R.string.descending).negativeColor(Color.parseColor(BaseActivity.accentSkin));
-        a.callback(new MaterialDialog.ButtonCallback() {
-            @Override
-            public void onPositive(MaterialDialog dialog) {
-                super.onPositive(dialog);
-                int which = dialog.getSelectedIndex();
-                m.Sp.edit().putString("sortbyApps", "" + which).commit();
-                m.getSortModes();
-                m.getLoaderManager().restartLoader(AppsList.ID_LOADER_APP_LIST, null, m);
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onNegative(MaterialDialog dialog) {
-                super.onNegative(dialog);
-                int which = dialog.getSelectedIndex() + 3;
-                m.Sp.edit().putString("sortbyApps", "" + which).commit();
-                m.getSortModes();
-                m.getLoaderManager().restartLoader(AppsList.ID_LOADER_APP_LIST, null, m);
                 dialog.dismiss();
             }
         });

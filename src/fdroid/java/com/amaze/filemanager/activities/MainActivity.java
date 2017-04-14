@@ -95,7 +95,6 @@ import com.amaze.filemanager.filesystem.BaseFile;
 import com.amaze.filemanager.filesystem.FileUtil;
 import com.amaze.filemanager.filesystem.HFile;
 import com.amaze.filemanager.filesystem.RootHelper;
-import com.amaze.filemanager.fragments.AppsList;
 import com.amaze.filemanager.fragments.Main;
 import com.amaze.filemanager.fragments.ProcessViewer;
 import com.amaze.filemanager.fragments.SearchAsyncHelper;
@@ -947,12 +946,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             case R.id.item3:
                 finish();
                 break;
-            case R.id.item10:
-                Fragment fragment = getDFragment();
-                if (fragment.getClass().getName().contains("AppsList"))
-                    utils.showSortDialog((AppsList) fragment, getAppTheme());
-
-                break;
             case R.id.sortby:
                 if (ma != null)
                     utils.showSortDialog(ma, getAppTheme());
@@ -1726,21 +1719,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
 
         });
         View appbutton = findViewById(R.id.appbutton);
-
-        appbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                android.support.v4.app.FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                transaction2.replace(R.id.content_frame, new AppsList());
-                findViewById(R.id.lin).animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                pending_fragmentTransaction = transaction2;
-                if (!isDrawerLocked) mDrawerLayout.closeDrawer(mDrawerLinear);
-                else onDrawerClosed();
-                select = -2;
-                adapter.toggleChecked(false);
-            }
-        });
 
         // status bar0
         sdk = Build.VERSION.SDK_INT;

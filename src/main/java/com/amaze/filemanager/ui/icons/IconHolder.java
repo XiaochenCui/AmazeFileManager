@@ -214,12 +214,8 @@ public class IconHolder {
         final String filePath = (fso);
 
         try {
-            if (Icons.isApk(filePath)) {
-                return getAppDrawable(fso);
-            } else if (Icons.isPicture(filePath)) {
-                return loadImage(fso);
-            } else if (Icons.isVideo(filePath))
-                return getVideoDrawable(fso);
+            // Only process video now.
+            return getVideoDrawable(fso);
         } catch (OutOfMemoryError outOfMemoryError) {
             cleanup();
             shutdownWorker();
@@ -238,56 +234,6 @@ public class IconHolder {
             e.printStackTrace();
             return null;
         }
-    }
-
-    private Bitmap getAppDrawable(String path) throws OutOfMemoryError {
-        Bitmap bitsat;
-        try {
-            PackageManager pm = mContext.getPackageManager();
-            PackageInfo pi = pm.getPackageArchiveInfo(path, 0);
-            // // the secret are these two lines....
-            pi.applicationInfo.sourceDir = path;
-            pi.applicationInfo.publicSourceDir = path;
-            // //
-            Drawable d = pi.applicationInfo.loadIcon(pm);
-
-            Bitmap d1 = null;
-            d1 = ((BitmapDrawable) d).getBitmap();
-            bitsat = d1;
-        } catch (Exception e) {
-            Drawable apk = ContextCompat.getDrawable(mContext, R.drawable.ic_doc_apk_grid);
-            Bitmap apk1 = ((BitmapDrawable) apk).getBitmap();
-            bitsat = apk1;
-        }
-        return bitsat;
-    }
-
-    public Bitmap loadImage(String path) throws OutOfMemoryError {
-        Bitmap bitsat;
-
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            options.inJustDecodeBounds = true;
-            Bitmap b = BitmapFactory.decodeFile(path, options);
-
-            options.inSampleSize = Futils.calculateInSampleSize(options, px, px);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-
-            Bitmap bit;
-            if (path.startsWith("smb:/"))
-                bit = BitmapFactory.decodeStream(new SmbFileInputStream(path));
-            else bit = BitmapFactory.decodeFile(path, options);
-
-            bitsat = bit;// decodeFile(path);//.createScaledBitmap(bits,imageViewReference.get().getHeight(),imageViewReference.get().getWidth(),true);
-        } catch (Exception e) {
-            Drawable img = ContextCompat.getDrawable(mContext, R.drawable.ic_doc_image);
-            Bitmap img1 = ((BitmapDrawable) img).getBitmap();
-            bitsat = img1;
-        }
-        return bitsat;
     }
 
     /**

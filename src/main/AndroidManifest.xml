@@ -21,7 +21,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.amaze.filemanager"
+    package="com.xiaochen.videoplayer"
     android:versionCode="53"
     android:versionName="3.1.2 Beta 9">
 
@@ -39,16 +39,15 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
     <application
-        android:name=".utils.AppConfig"
+        android:name="com.xiaochen.videoplayer.utils.AppConfig"
         android:icon="@mipmap/ic_launcher"
-	android:roundIcon="@mipmap/ic_launcher_round"
         tools:replace="android:label"
         android:label="Amaze">
 
         <activity
-            android:label="Amaze"
+            android:label="VideoPlayer"
             android:launchMode="singleInstance"
-            android:name=".activities.MainActivity"
+            android:name="com.xiaochen.videoplayer.activities.MainActivity"
             android:theme="@style/appCompatLight">
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
@@ -79,7 +78,7 @@
 		<activity
 			android:uiOptions="splitActionBarWhenNarrow"
             android:label="@string/setting"
-            android:name=".activities.Preferences" 
+            android:name="com.xiaochen.videoplayer.activities.Preferences"
 			android:theme="@style/appCompatLight">
 	    <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
@@ -89,17 +88,17 @@
         </activity>
 
         <service
-			android:name = ".services.ExtractService"
+			android:name = "com.xiaochen.videoplayer.services.ExtractService"
 			android:label = "Extracting"
 			>	
 		</service>
         <service
-			android:name = ".services.ZipTask"
+			android:name = "com.xiaochen.videoplayer.services.ZipTask"
 			android:label = "Compressing"
             >
 		</service>
 			<service
-			android:name = ".services.CopyService"
+			android:name = "com.xiaochen.videoplayer.services.CopyService"
 			android:label = "Copying"
             >
 		</service>

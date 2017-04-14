@@ -111,7 +111,7 @@
         android:layout_marginTop="5dp"
         android:id="@+id/dirprops"
         android:orientation="horizontal">
-        <com.amaze.filemanager.ui.views.SizeDrawable
+        <com.xiaochen.videoplayer.ui.views.SizeDrawable
             android:id="@+id/sizedrawable"
             android:layout_width="40dp"
             android:layout_gravity="center_horizontal"

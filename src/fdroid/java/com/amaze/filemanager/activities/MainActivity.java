@@ -376,9 +376,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             //mainFragment = (Main) savedInstanceState.getParcelable("main_fragment");
         }
 
-        if (getAppTheme().equals(AppTheme.DARK)) {
-            mDrawerList.setBackgroundColor(getResources().getColor(R.color.holo_dark_background));
-        }
         mDrawerList.setDivider(null);
         if (!isDrawerLocked) {
             mDrawerToggle = new ActionBarDrawerToggle(

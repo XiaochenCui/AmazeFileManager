@@ -37,7 +37,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.amaze.filemanager.BuildConfig;
 import com.amaze.filemanager.R;
-import com.amaze.filemanager.activities.AboutActivity;
 import com.amaze.filemanager.activities.BaseActivity;
 import com.amaze.filemanager.ui.views.CheckBx;
 import com.amaze.filemanager.utils.Futils;
@@ -154,16 +153,6 @@ public class Preffrag extends PreferenceFragment{
                         "mailto","vishalmeham2@gmail.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Feedback : Amaze File Manager");
                 startActivity(Intent.createChooser(emailIntent, getResources().getString(R.string.feedback)));
-                return false;
-            }
-        });
-
-        // About
-        Preference aboutPreference = findPreference(PREFERENCE_KEY_ABOUT);
-        aboutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), AboutActivity.class));
                 return false;
             }
         });

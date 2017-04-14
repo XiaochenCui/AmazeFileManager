@@ -1388,7 +1388,6 @@ public class Main extends android.support.v4.app.Fragment {
 
     public void hide(String path) {
 
-        DataUtils.addHiddenFile(path);
         if (new File(path).isDirectory()) {
             File f1 = new File(path + "/" + ".nomedia");
             if (!f1.exists()) {

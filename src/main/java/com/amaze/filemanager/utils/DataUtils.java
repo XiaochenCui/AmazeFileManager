@@ -77,10 +77,6 @@ public class DataUtils {
         if(books.size()>i)
             books.remove(i);
     }
-    public static void removeAcc(int i){
-        if(accounts.size()>i)
-            accounts.remove(i);
-    }
     public static void removeServer(int i){
         if(servers.size()>i)
             servers.remove(i);
@@ -92,29 +88,14 @@ public class DataUtils {
         if(refreshdrawer && dataChangeListener!=null)dataChangeListener.onBookAdded(i,true);
         books.add(i);
     }
-    public static void addAcc(String[] i){
-            accounts.add(i);
-    }
     public static void addServer(String[] i){
             servers.add(i);
     }
-    public static void addHiddenFile(String i)
-    {
-        hiddenfiles.add(i);
-        if(dataChangeListener!=null)
-            dataChangeListener.onHiddenFileAdded(i);
-    }
     public static void removeHiddenFile(String i)
     {
-        hiddenfiles.remove(i);
-        if(dataChangeListener!=null)
-            dataChangeListener.onHiddenFileRemoved(i);
     }
     public static void addHistoryFile(String i)
     {
-        history.add(i);
-        if(dataChangeListener!=null)
-            dataChangeListener.onHistoryAdded(i);
     }
     public static void sortBook(){
         Collections.sort(books,new BookSorter());
@@ -169,11 +150,6 @@ public class DataUtils {
        if(listfiles!=null)
         DataUtils.listfiles = listfiles;
     }
-    public static void clearHistory() {
-        history=new ArrayList<>();
-        if(dataChangeListener!=null)
-            dataChangeListener.onHistoryCleared();
-    }
 
     public static List<String> getStorages() {
         return storages;
@@ -192,10 +168,6 @@ public class DataUtils {
     }
     //Callbacks to do original changes in database (and ui if required)
     public interface DataChangeListener{
-        void onHiddenFileAdded(String path);
-        void onHiddenFileRemoved(String path);
-        void onHistoryAdded(String path);
         void onBookAdded(String path[],boolean refreshdrawer);
-        void onHistoryCleared();
     }
 }

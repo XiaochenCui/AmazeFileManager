@@ -167,7 +167,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     public LinearLayout pathbar;
     public FrameLayout buttonBarFrame;
     public boolean isDrawerLocked = false;
-    HistoryManager history, grid;
+    HistoryManager grid;
     Futils utils;
 
     MainActivity mainActivity = this;
@@ -258,9 +258,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         mainActivityHelper = new MainActivityHelper(this);
         initialiseFab();
 
-        history = new HistoryManager(this, "Table2");
-        history.initializeTable(DataUtils.HISTORY, 0);
-        history.initializeTable(DataUtils.HIDDEN, 0);
         grid = new HistoryManager(this, "listgridmodes");
         grid.initializeTable(DataUtils.LIST, 0);
         grid.initializeTable(DataUtils.GRID, 0);
@@ -272,7 +269,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             grid.make(DataUtils.BOOKS);
             Sp.edit().putBoolean("booksadded", true).commit();
         }
-        DataUtils.setHiddenfiles(history.readTable(DataUtils.HIDDEN));
         DataUtils.setGridfiles(grid.readTable(DataUtils.GRID));
         DataUtils.setListfiles(grid.readTable(DataUtils.LIST));
         util = new IconUtils(Sp, this);
@@ -926,8 +922,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                     ma.home();
                 break;
             case R.id.history:
-                if (ma != null)
-                    utils.showHistoryDialog(ma, getAppTheme());
                 break;
             case R.id.sethome:
                 if (ma == null) return super.onOptionsItemSelected(item);
@@ -1288,10 +1282,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
 
         if (grid != null)
             grid.end();
-        if (history != null)
-            history.end();
-        /*if (mainFragment!=null)
-            mainFragment=null;*/
     }
 
     /**
@@ -1739,11 +1729,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
 
         });
         View appbutton = findViewById(R.id.appbutton);
-        if (getAppTheme().equals(AppTheme.DARK)) {
-            appbutton.setBackgroundResource(R.drawable.safr_ripple_black);
-            ((ImageView) appbutton.findViewById(R.id.appicon)).setImageResource(R.drawable.ic_doc_apk_white);
-            ((TextView) appbutton.findViewById(R.id.apptext)).setTextColor(getResources().getColor(android.R.color.white));
-        }
+
         appbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1758,10 +1744,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 adapter.toggleChecked(false);
             }
         });
-
-
-        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor((currentTab==1 ? skinTwo : skin))));
-
 
         // status bar0
         sdk = Build.VERSION.SDK_INT;
@@ -2459,30 +2441,10 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     }
 
     @Override
-    public void onHiddenFileAdded(String path) {
-        history.addPath(null, path, DataUtils.HIDDEN, 0);
-    }
-
-    @Override
-    public void onHiddenFileRemoved(String path) {
-        history.removePath(path, DataUtils.HIDDEN);
-    }
-
-    @Override
-    public void onHistoryAdded(String path) {
-        history.addPath(null, path, DataUtils.HISTORY, 0);
-    }
-
-    @Override
     public void onBookAdded(String[] path, boolean refreshdrawer) {
         grid.addPath(path[0], path[1], DataUtils.BOOKS, 1);
         if (refreshdrawer)
             refreshDrawer();
-    }
-
-    @Override
-    public void onHistoryCleared() {
-        history.clear(DataUtils.HISTORY);
     }
 
     @Override

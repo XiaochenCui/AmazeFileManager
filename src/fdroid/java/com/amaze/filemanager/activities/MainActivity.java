@@ -1932,17 +1932,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         }
     }
 
-
-    public void invalidateFab(int openmode) {
-        if (openmode == 2) {
-            floatingActionButton.setVisibility(View.INVISIBLE);
-            floatingActionButton.hideMenuButton(true);
-        } else {
-            floatingActionButton.setVisibility(View.VISIBLE);
-            floatingActionButton.showMenuButton(true);
-        }
-    }
-
     public void renameBookmark(final String title, final String path) {
         if (DataUtils.containsBooks(new String[]{title, path}) != -1 || DataUtils.containsAccounts(new String[]{title, path}) != -1) {
             RenameBookmark renameBookmark = RenameBookmark.getInstance(title, path, BaseActivity.accentSkin);

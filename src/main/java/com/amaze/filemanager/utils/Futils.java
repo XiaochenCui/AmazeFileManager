@@ -97,12 +97,13 @@ public class Futils {
 
     public Futils() {
     }
+
     //methods for fastscroller
     public static float getViewRawY(View view) {
         int[] location = new int[2];
         location[0] = 0;
         location[1] = (int) view.getY();
-        ((View)view.getParent()).getLocationInWindow(location);
+        ((View) view.getParent()).getLocationInWindow(location);
         return location[1];
     }
 
@@ -123,7 +124,7 @@ public class Futils {
                 .negativeColor(Color.parseColor(fabskin));
         if (texts[4] != (null)) {
             a.neutralText(texts[4])
-             .neutralColor(Color.parseColor(fabskin));
+                    .neutralColor(Color.parseColor(fabskin));
         }
         return a.build();
     }
@@ -156,7 +157,7 @@ public class Futils {
     public static long folderSize(File directory) {
         long length = 0;
         try {
-            for (File file:directory.listFiles()) {
+            for (File file : directory.listFiles()) {
 
                 if (file.isFile())
                     length += file.length();
@@ -171,7 +172,7 @@ public class Futils {
     public static long folderSize(SmbFile directory) {
         long length = 0;
         try {
-            for (SmbFile file:directory.listFiles()) {
+            for (SmbFile file : directory.listFiles()) {
 
                 if (file.isFile())
                     length += file.length();
@@ -186,6 +187,7 @@ public class Futils {
 
     /**
      * Helper method to get size of an otg folder
+     *
      * @param path
      * @param context
      * @return
@@ -201,7 +203,7 @@ public class Futils {
     }
 
     public static void setTint(CheckBox box, int color) {
-        if(Build.VERSION.SDK_INT>=21)return;
+        if (Build.VERSION.SDK_INT >= 21) return;
         ColorStateList sl = new ColorStateList(new int[][]{
                 new int[]{-android.R.attr.state_checked},
                 new int[]{android.R.attr.state_checked}
@@ -235,7 +237,7 @@ public class Futils {
         }
     }
 
-    public void crossfade(View buttons,final View pathbar) {
+    public void crossfade(View buttons, final View pathbar) {
 
         // Set the content view to 0% opacity but visible, so that it is visible
         // (but fully transparent) during the animation.
@@ -263,6 +265,7 @@ public class Futils {
         // participate in layout passes, etc.)
 
     }
+
     public void revealShow(final View view, boolean reveal) {
 
         if (reveal) {
@@ -292,7 +295,7 @@ public class Futils {
     }
 
 
-    public void crossfadeInverse(final View buttons,final View pathbar) {
+    public void crossfadeInverse(final View buttons, final View pathbar) {
 
 
         // Set the content view to 0% opacity but visible, so that it is visible
@@ -321,11 +324,11 @@ public class Futils {
         // participate in layout passes, etc.)
     }
 
-    public void shareFiles(ArrayList<File> a, Activity c,int theme,int fab_skin) {
-        shareFiles(a,c, AppTheme.fromIndex(theme), fab_skin);
+    public void shareFiles(ArrayList<File> a, Activity c, int theme, int fab_skin) {
+        shareFiles(a, c, AppTheme.fromIndex(theme), fab_skin);
     }
 
-    public void shareFiles(ArrayList<File> a, Activity c,AppTheme appTheme,int fab_skin) {
+    public void shareFiles(ArrayList<File> a, Activity c, AppTheme appTheme, int fab_skin) {
         ArrayList<Uri> uris = new ArrayList<Uri>();
         boolean b = true;
         for (File f : a) {
@@ -340,11 +343,11 @@ public class Futils {
                 }
             }
 
-        if (!b || mime==(null))
+        if (!b || mime == (null))
             mime = "*/*";
         try {
 
-            new ShareTask(c,uris,appTheme,fab_skin).execute(mime);
+            new ShareTask(c, uris, appTheme, fab_skin).execute(mime);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -353,18 +356,18 @@ public class Futils {
     public static float readableFileSizeFloat(long size) {
         if (size <= 0)
             return 0;
-        float digitGroups = (float) (size / (1024*1024));
+        float digitGroups = (float) (size / (1024 * 1024));
         return digitGroups;
     }
 
-    private boolean isSelfDefault(File f, Context c){
+    private boolean isSelfDefault(File f, Context c) {
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(f), MimeTypes.getMimeType(f));
-        String s="";
+        String s = "";
         ResolveInfo rii = c.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (rii !=  null && rii.activityInfo != null) s = rii.activityInfo.packageName;
-        if (s.equals("com.amaze.filemanager") || rii==null) return true;
+        if (rii != null && rii.activityInfo != null) s = rii.activityInfo.packageName;
+        if (s.equals("com.amaze.filemanager") || rii == null) return true;
         else return false;
     }
 
@@ -373,21 +376,24 @@ public class Futils {
         intent.setAction(android.content.Intent.ACTION_VIEW);
 
         String type = MimeTypes.getMimeType(f);
-        if(type!=null && type.trim().length()!=0 && !type.equals("*/*"))
-        {
-            Uri uri=fileToContentUri(c, f);
-            if(uri==null)uri=Uri.fromFile(f);
+        if (type != null && type.trim().length() != 0 && !type.equals("*/*")) {
+            Uri uri = fileToContentUri(c, f);
+            if (uri == null) uri = Uri.fromFile(f);
             intent.setDataAndType(uri, type);
-        Intent startintent;
-        if (forcechooser) startintent=Intent.createChooser(intent, c.getResources().getString(R.string.openwith));
-        else startintent=intent;
-        try {
-            c.startActivity(startintent);
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-        Toast.makeText(c,R.string.noappfound,Toast.LENGTH_SHORT).show();
-        openWith(f,c);
-        }}else{openWith(f, c);}
+            Intent startintent;
+            if (forcechooser)
+                startintent = Intent.createChooser(intent, c.getResources().getString(R.string.openwith));
+            else startintent = intent;
+            try {
+                c.startActivity(startintent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(c, R.string.noappfound, Toast.LENGTH_SHORT).show();
+                openWith(f, c);
+            }
+        } else {
+            openWith(f, c);
+        }
 
     }
 
@@ -397,17 +403,18 @@ public class Futils {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         String type = f.getType();
-        if(type!=null && type.trim().length()!=0 && !type.equals("*/*")) {
+        if (type != null && type.trim().length() != 0 && !type.equals("*/*")) {
             intent.setDataAndType(f.getUri(), type);
             Intent startintent;
-            if (forcechooser) startintent=Intent.createChooser(intent, c.getResources().getString(R.string.openwith));
-            else startintent=intent;
+            if (forcechooser)
+                startintent = Intent.createChooser(intent, c.getResources().getString(R.string.openwith));
+            else startintent = intent;
             try {
                 c.startActivity(startintent);
             } catch (ActivityNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(c,R.string.noappfound,Toast.LENGTH_SHORT).show();
-                openWith(f,c);
+                Toast.makeText(c, R.string.noappfound, Toast.LENGTH_SHORT).show();
+                openWith(f, c);
             }
         } else {
             openWith(f, c);
@@ -421,6 +428,7 @@ public class Futils {
     private static final String EMULATED_STORAGE_SOURCE = System.getenv("EMULATED_STORAGE_SOURCE");
     private static final String EMULATED_STORAGE_TARGET = System.getenv("EMULATED_STORAGE_TARGET");
     private static final String EXTERNAL_STORAGE = System.getenv("EXTERNAL_STORAGE");
+
     public static String normalizeMediaPath(String path) {
         // Retrieve all the paths and check that we have this environment vars
         if (TextUtils.isEmpty(EMULATED_STORAGE_SOURCE) ||
@@ -435,6 +443,7 @@ public class Futils {
         }
         return path;
     }
+
     public static Uri fileToContentUri(Context context, File file) {
         // Normalize the path to ensure media search
         final String normalizedPath = normalizeMediaPath(file.getAbsolutePath());
@@ -456,7 +465,7 @@ public class Futils {
         final String where = MediaStore.MediaColumns.DATA + " = ?";
         Uri baseUri = MediaStore.Files.getContentUri(volume);
         boolean isMimeTypeImage = false, isMimeTypeVideo = false, isMimeTypeAudio = false;
-        isMimeTypeImage = Icons.isPicture( path);
+        isMimeTypeImage = Icons.isPicture(path);
         if (!isMimeTypeImage) {
             isMimeTypeVideo = Icons.isVideo(path);
             if (!isMimeTypeVideo) {
@@ -502,10 +511,10 @@ public class Futils {
         return null;
     }
 
-    public void openWith(final File f,final Context c) {
-        MaterialDialog.Builder a=new MaterialDialog.Builder(c);
+    public void openWith(final File f, final Context c) {
+        MaterialDialog.Builder a = new MaterialDialog.Builder(c);
         a.title(c.getResources().getString(R.string.openas));
-        String[] items=new String[]{c.getResources().getString(R.string.text),c.getResources().getString(R.string.image),c.getResources().getString(R.string.video),c.getResources().getString(R.string.audio),c.getResources().getString(R.string.database),c.getResources().getString(R.string.other)};
+        String[] items = new String[]{c.getResources().getString(R.string.text), c.getResources().getString(R.string.image), c.getResources().getString(R.string.video), c.getResources().getString(R.string.audio), c.getResources().getString(R.string.database), c.getResources().getString(R.string.other)};
 
         a.items(items).itemsCallback(new MaterialDialog.ListCallback() {
             @Override
@@ -548,10 +557,10 @@ public class Futils {
         }
     }
 
-    public void openWith(final DocumentFile f,final Context c) {
-        MaterialDialog.Builder a=new MaterialDialog.Builder(c);
+    public void openWith(final DocumentFile f, final Context c) {
+        MaterialDialog.Builder a = new MaterialDialog.Builder(c);
         a.title(c.getResources().getString(R.string.openas));
-        String[] items=new String[]{c.getResources().getString(R.string.text),c.getResources().getString(R.string.image),c.getResources().getString(R.string.video),c.getResources().getString(R.string.audio),c.getResources().getString(R.string.database),c.getResources().getString(R.string.other)};
+        String[] items = new String[]{c.getResources().getString(R.string.text), c.getResources().getString(R.string.image), c.getResources().getString(R.string.video), c.getResources().getString(R.string.audio), c.getResources().getString(R.string.database), c.getResources().getString(R.string.other)};
 
         a.items(items).itemsCallback(new MaterialDialog.ListCallback() {
             @Override
@@ -648,8 +657,8 @@ public class Futils {
 
     public static String getdate(long f, String year) {
         String date = sSDF.format(f);
-        if(date.substring(date.length()-4,date.length()).equals(year))
-            date=date.substring(0,date.length()-6);
+        if (date.substring(date.length() - 4, date.length()).equals(year))
+            date = date.substring(0, date.length() - 6);
         return date;
     }
 
@@ -678,7 +687,7 @@ public class Futils {
     }
 
     public void showProps(final BaseFile hFile, final String perm, final Main c, boolean root, AppTheme appTheme) {
-        long last=hFile.getDate();
+        long last = hFile.getDate();
         String date = getdate(last);
         String items = c.getResources().getString(R.string.calculating), size = c.getResources().getString(R.string.calculating), name, parent;
         name = hFile.getName();
@@ -686,14 +695,14 @@ public class Futils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c.getActivity());
         String fabskin = PreferenceUtils.getAccentString(sp);
         MaterialDialog.Builder a = new MaterialDialog.Builder(c.getActivity());
-        a.title(c.getResources().getString( R.string.properties));
+        a.title(c.getResources().getString(R.string.properties));
         a.theme(appTheme.getMaterialDialogTheme());
-        View v=c.getActivity().getLayoutInflater().inflate(R.layout.properties_dialog,null);
-        AppCompatButton appCompatButton=(AppCompatButton)v.findViewById(R.id.appX);
+        View v = c.getActivity().getLayoutInflater().inflate(R.layout.properties_dialog, null);
+        AppCompatButton appCompatButton = (AppCompatButton) v.findViewById(R.id.appX);
         appCompatButton.setAllCaps(true);
-        final View permtabl=v.findViewById(R.id.permtable);
-        final View but=v.findViewById(R.id.set);
-        if(root && perm.length()>6) {
+        final View permtabl = v.findViewById(R.id.permtable);
+        final View but = v.findViewById(R.id.set);
+        if (root && perm.length() > 6) {
             appCompatButton.setVisibility(View.VISIBLE);
             appCompatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -712,7 +721,7 @@ public class Futils {
         }
         a.customView(v, true);
         a.positiveText(R.string.copy_path);
-        a.negativeText(c.getResources().getString( R.string.md5_2));
+        a.negativeText(c.getResources().getString(R.string.md5_2));
         a.positiveColor(Color.parseColor(fabskin));
         a.negativeColor(Color.parseColor(fabskin));
         a.neutralText(R.string.cancel);
@@ -728,27 +737,28 @@ public class Futils {
             public void onNegative(MaterialDialog materialDialog) {
             }
         });
-        MaterialDialog materialDialog=a.build();
+        MaterialDialog materialDialog = a.build();
         materialDialog.show();
         /*View bottomSheet = c.findViewById(R.id.design_bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.STATE_DRAGGING);*/
-        new GenerateMD5Task(materialDialog, hFile, name, parent, size, items, date,c.getActivity()
-                ,v).execute(hFile.getPath());
+        new GenerateMD5Task(materialDialog, hFile, name, parent, size, items, date, c.getActivity()
+                , v).execute(hFile.getPath());
     }
-    public static long[] getSpaces(HFile hFile){
-        if(!hFile.isSmb() && hFile.isDirectory()){
+
+    public static long[] getSpaces(HFile hFile) {
+        if (!hFile.isSmb() && hFile.isDirectory()) {
             try {
-                File file=new File(hFile.getPath());
-                long[] ints=new long[]{file.getTotalSpace(), file.getFreeSpace(),folderSize
+                File file = new File(hFile.getPath());
+                long[] ints = new long[]{file.getTotalSpace(), file.getFreeSpace(), folderSize
                         (new File(hFile.getPath()))};
                 return ints;
             } catch (Exception e) {
-                return new long[]{-1,-1,-1};
+                return new long[]{-1, -1, -1};
             }
         }
-        return new long[]{-1,-1,-1};
+        return new long[]{-1, -1, -1};
     }
 
     public void showProps(final HFile f, final Activity c, AppTheme appTheme) {
@@ -827,15 +837,19 @@ public class Futils {
         return b;
     }
 
-    public boolean deletedirectory(File f){
-        boolean b=true;
-        for(File file:f.listFiles()){
+    public boolean deletedirectory(File f) {
+        boolean b = true;
+        for (File file : f.listFiles()) {
             boolean c;
-            if(file.isDirectory()){c=deletedirectory(file);}
-            else {c=file.delete();}
-            if(!c)b=false;
+            if (file.isDirectory()) {
+                c = deletedirectory(file);
+            } else {
+                c = file.delete();
+            }
+            if (!c) b = false;
 
-        }if(b)b=f.delete();
+        }
+        if (b) b = f.delete();
         return b;
     }
 
@@ -855,13 +869,13 @@ public class Futils {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(m);
         if (defaultHandler && f.getName().toLowerCase().endsWith(".zip") ||
                 f.getName().toLowerCase().endsWith(".jar") ||
-                f.getName().toLowerCase().endsWith(".rar")||
+                f.getName().toLowerCase().endsWith(".rar") ||
                 f.getName().toLowerCase().endsWith(".tar") ||
                 f.getName().toLowerCase().endsWith(".tar.gz")) {
             showArchiveDialog(f, m);
-        } else if(f.getName().toLowerCase().endsWith(".apk")) {
+        } else if (f.getName().toLowerCase().endsWith(".apk")) {
             showPackageDialog(f, m);
-        }  else if (Icons.isAudio(f.getPath())) {
+        } else if (Icons.isAudio(f.getPath())) {
             final int studio_count = sharedPreferences.getInt("studio", 0);
             Uri uri = Uri.fromFile(f);
             final Intent intent = new Intent();
@@ -869,12 +883,12 @@ public class Futils {
             intent.setDataAndType(uri, "audio/*");
 
             // Behold! It's the  legendary easter egg!
-            if (studio_count!=0) {
+            if (studio_count != 0) {
                 new CountDownTimer(studio_count, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        int sec = (int)millisUntilFinished/1000;
-                        if (studioCount!=null)
+                        int sec = (int) millisUntilFinished / 1000;
+                        if (studioCount != null)
                             studioCount.cancel();
                         studioCount = Toast.makeText(m, sec + "", Toast.LENGTH_LONG);
                         studioCount.show();
@@ -882,7 +896,7 @@ public class Futils {
 
                     @Override
                     public void onFinish() {
-                        if (studioCount!=null)
+                        if (studioCount != null)
                             studioCount.cancel();
                         studioCount = Toast.makeText(m, m.getString(R.string.opening),
                                 Toast.LENGTH_LONG);
@@ -896,7 +910,7 @@ public class Futils {
             try {
                 openunknown(f, m, false);
             } catch (Exception e) {
-                Toast.makeText(m, m.getResources().getString(R.string.noappfound),Toast.LENGTH_LONG).show();
+                Toast.makeText(m, m.getResources().getString(R.string.noappfound), Toast.LENGTH_LONG).show();
                 openWith(f, m);
             }
         }
@@ -906,14 +920,14 @@ public class Futils {
         try {
             openunknown(f, m, false);
         } catch (Exception e) {
-            Toast.makeText(m, m.getResources().getString(R.string.noappfound),Toast.LENGTH_LONG).show();
+            Toast.makeText(m, m.getResources().getString(R.string.noappfound), Toast.LENGTH_LONG).show();
             openWith(f, m);
         }
 
     }
 
-    public static void showSMBHelpDialog(Context m,String acc){
-        MaterialDialog.Builder b=new MaterialDialog.Builder(m);
+    public static void showSMBHelpDialog(Context m, String acc) {
+        MaterialDialog.Builder b = new MaterialDialog.Builder(m);
         b.content(m.getText(R.string.smb_instructions));
         b.positiveText(R.string.doit);
         b.positiveColor(Color.parseColor(acc));
@@ -923,26 +937,18 @@ public class Futils {
     public void showPackageDialog(final File f, final MainActivity m) {
         MaterialDialog.Builder mat = new MaterialDialog.Builder(m);
         mat.title(R.string.packageinstaller).content(R.string.pitext)
-           .positiveText(R.string.install)
-           .negativeText(R.string.view)
-           .neutralText(R.string.cancel)
-           .positiveColor(Color.parseColor(BaseActivity.accentSkin))
-           .negativeColor(Color.parseColor(BaseActivity.accentSkin))
-           .neutralColor(Color.parseColor(BaseActivity.accentSkin))
-           .callback(new MaterialDialog.ButtonCallback() {
-               @Override
-               public void onPositive(MaterialDialog materialDialog) {
-                   openunknown(f, m, false);
-               }
+                .positiveText(R.string.install)
+                .negativeText(R.string.view)
+                .neutralText(R.string.cancel)
+                .positiveColor(Color.parseColor(BaseActivity.accentSkin))
+                .negativeColor(Color.parseColor(BaseActivity.accentSkin))
+                .neutralColor(Color.parseColor(BaseActivity.accentSkin))
+                .callback(new MaterialDialog.ButtonCallback() {
 
-               @Override
-               public void onNegative(MaterialDialog materialDialog) {
-                   m.openZip(f.getPath());
-               }
-           })
-           .theme(m.getAppTheme().getMaterialDialogTheme())
-           .build()
-           .show();
+                })
+                .theme(m.getAppTheme().getMaterialDialogTheme())
+                .build()
+                .show();
     }
 
     public void showArchiveDialog(final File f, final MainActivity m) {
@@ -956,19 +962,8 @@ public class Futils {
                 .negativeColor(Color.parseColor(BaseActivity.accentSkin))
                 .neutralColor(Color.parseColor(BaseActivity.accentSkin))
                 .callback(new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog materialDialog) {
-                        m. mainActivityHelper.extractFile(f);
-                    }
 
-                    @Override
-                    public void onNegative(MaterialDialog materialDialog) {
-                        //m.addZipViewTab(f.getPath());
-                        if (f.getName().toLowerCase().endsWith(".rar"))
-                            m.openRar(Uri.fromFile(f).toString());
-                        else
-                            m.openZip(Uri.fromFile(f).toString());
-                    }
+
                 });
         if (m.getAppTheme().equals(AppTheme.DARK)) mat.theme(Theme.DARK);
         MaterialDialog b = mat.build();
@@ -980,14 +975,14 @@ public class Futils {
     }
 
     public Layoutelements newElement(BitmapDrawable i, String d, String permissions, String symlink, String size, long longSize, boolean directorybool, boolean b, String date) {
-        Layoutelements item = new Layoutelements(i, new File(d).getName(), d,permissions,symlink,size,longSize,b,date,directorybool);
+        Layoutelements item = new Layoutelements(i, new File(d).getName(), d, permissions, symlink, size, longSize, b, date, directorybool);
         return item;
     }
 
     public ArrayList<HFile> toHFileArray(ArrayList<String> a) {
         ArrayList<HFile> b = new ArrayList<>();
         for (int i = 0; i < a.size(); i++) {
-            HFile hFile=new HFile(OpenMode.UNKNOWN,a.get(i));
+            HFile hFile = new HFile(OpenMode.UNKNOWN, a.get(i));
             hFile.generateMode(null);
             b.add(hFile);
         }
@@ -1119,10 +1114,10 @@ public class Futils {
         a.theme(appTheme.getMaterialDialogTheme());
 
         a.autoDismiss(true);
-        HiddenAdapter adapter = new HiddenAdapter(m.getActivity(),m, this, R.layout.bookmarkrow, toHFileArray(DataUtils.history),null,true);
+        HiddenAdapter adapter = new HiddenAdapter(m.getActivity(), m, this, R.layout.bookmarkrow, toHFileArray(DataUtils.history), null, true);
         a.adapter(adapter, null);
 
-        MaterialDialog x= a.build();
+        MaterialDialog x = a.build();
         adapter.updateDialog(x);
         x.show();
 
@@ -1135,38 +1130,40 @@ public class Futils {
         a.title(R.string.hiddenfiles);
         a.theme(appTheme.getMaterialDialogTheme());
         a.autoDismiss(true);
-        HiddenAdapter adapter = new HiddenAdapter(m.getActivity(),m, this, R.layout.bookmarkrow, toHFileArray(DataUtils.getHiddenfiles()),null,false);
+        HiddenAdapter adapter = new HiddenAdapter(m.getActivity(), m, this, R.layout.bookmarkrow, toHFileArray(DataUtils.getHiddenfiles()), null, false);
         a.adapter(adapter, null);
         a.dividerColor(Color.GRAY);
-        MaterialDialog x= a.build();
+        MaterialDialog x = a.build();
         adapter.updateDialog(x);
         x.show();
 
     }
-    public boolean isAtleastKitkat(){
-        return Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT;
+
+    public boolean isAtleastKitkat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
-    public void setPermissionsDialog(final View v,View but,final HFile file, final String f, final Main main) {
-        final CheckBox readown=(CheckBox) v.findViewById(R.id.creadown);
-        final CheckBox readgroup=(CheckBox) v.findViewById(R.id.creadgroup);
-        final CheckBox readother=(CheckBox) v.findViewById(R.id.creadother);
-        final CheckBox writeown=(CheckBox) v.findViewById(R.id.cwriteown);
-        final CheckBox writegroup=(CheckBox) v.findViewById(R.id.cwritegroup);
-        final CheckBox writeother=(CheckBox) v.findViewById(R.id.cwriteother);
-        final CheckBox exeown=(CheckBox) v.findViewById(R.id.cexeown);
-        final CheckBox exegroup=(CheckBox) v.findViewById(R.id.cexegroup);
-        final CheckBox exeother=(CheckBox) v.findViewById(R.id.cexeother);
-        String perm=f;
-        if(perm.length()<6){
+
+    public void setPermissionsDialog(final View v, View but, final HFile file, final String f, final Main main) {
+        final CheckBox readown = (CheckBox) v.findViewById(R.id.creadown);
+        final CheckBox readgroup = (CheckBox) v.findViewById(R.id.creadgroup);
+        final CheckBox readother = (CheckBox) v.findViewById(R.id.creadother);
+        final CheckBox writeown = (CheckBox) v.findViewById(R.id.cwriteown);
+        final CheckBox writegroup = (CheckBox) v.findViewById(R.id.cwritegroup);
+        final CheckBox writeother = (CheckBox) v.findViewById(R.id.cwriteother);
+        final CheckBox exeown = (CheckBox) v.findViewById(R.id.cexeown);
+        final CheckBox exegroup = (CheckBox) v.findViewById(R.id.cexegroup);
+        final CheckBox exeother = (CheckBox) v.findViewById(R.id.cexeother);
+        String perm = f;
+        if (perm.length() < 6) {
             v.setVisibility(View.GONE);
             but.setVisibility(View.GONE);
-            Toast.makeText(main.getActivity(),R.string.not_allowed,Toast.LENGTH_SHORT).show();
+            Toast.makeText(main.getActivity(), R.string.not_allowed, Toast.LENGTH_SHORT).show();
             return;
         }
-        ArrayList<Boolean[]> arrayList=parse(perm);
-        Boolean[] read=arrayList.get(0);
-        Boolean[] write=arrayList.get(1);
-        final Boolean[] exe=arrayList.get(2);
+        ArrayList<Boolean[]> arrayList = parse(perm);
+        Boolean[] read = arrayList.get(0);
+        Boolean[] write = arrayList.get(1);
+        final Boolean[] exe = arrayList.get(2);
         readown.setChecked(read[0]);
         readgroup.setChecked(read[1]);
         readother.setChecked(read[2]);
@@ -1200,13 +1197,13 @@ public class Futils {
 
                 String command = "chmod " + finalValue + " " + file.getPath();
                 if (file.isDirectory())
-                    command = "chmod -R " + finalValue + " \"" + file.getPath()+"\"";
+                    command = "chmod -R " + finalValue + " \"" + file.getPath() + "\"";
 
                 try {
                     RootHelper.runShellCommand(command, new Shell.OnCommandResultListener() {
                         @Override
                         public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                            if (exitCode<0) {
+                            if (exitCode < 0) {
                                 Toast.makeText(main.getActivity(), main.getString(R.string.operationunsuccesful),
                                         Toast.LENGTH_LONG).show();
                             } else {
@@ -1228,6 +1225,7 @@ public class Futils {
 
     /**
      * We're parsing a line returned from a stdout of shell.
+     *
      * @param line must be the line returned from a 'ls' command
      * @return
      */
@@ -1235,16 +1233,17 @@ public class Futils {
         boolean linked = false;
         String name = "", link = "", size = "-1", date = "";
         String[] array = line.split(" ");
-        if(array.length<6)return null;
+        if (array.length < 6) return null;
         for (int i = 0; i < array.length; i++) {
             if (array[i].contains("->") && array[0].startsWith("l")) {
                 linked = true;
             }
         }
         int p = getColonPosition(array);
-        if(p!=-1){
+        if (p != -1) {
             date = array[p - 1] + " | " + array[p];
-            size = array[p - 2];}
+            size = array[p - 2];
+        }
         if (!linked) {
             for (int i = p + 1; i < array.length; i++) {
                 name = name + " " + array[i];
@@ -1260,78 +1259,78 @@ public class Futils {
                 link = link + " " + array[i];
             }
         }
-        long Size = (size==null || size.trim().length()==0)?-1:Long.parseLong(size);
-        if(date.trim().length()>0) {
+        long Size = (size == null || size.trim().length() == 0) ? -1 : Long.parseLong(size);
+        if (date.trim().length() > 0) {
             ParsePosition pos = new ParsePosition(0);
             SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd | HH:mm");
             Date stringDate = simpledateformat.parse(date, pos);
-            BaseFile baseFile=new BaseFile(name,array[0],stringDate.getTime(),Size,true);
+            BaseFile baseFile = new BaseFile(name, array[0], stringDate.getTime(), Size, true);
             baseFile.setLink(link);
             return baseFile;
-        }else {
-            BaseFile baseFile= new BaseFile(name,array[0],new File("/").lastModified(),Size,true);
+        } else {
+            BaseFile baseFile = new BaseFile(name, array[0], new File("/").lastModified(), Size, true);
             baseFile.setLink(link);
             return baseFile;
         }
     }
 
-    private static int getLinkPosition(String[] array){
-        for(int i=0;i<array.length;i++){
-            if(array[i].contains("->"))return i;
+    private static int getLinkPosition(String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].contains("->")) return i;
         }
-        return  0;
+        return 0;
     }
 
-    private static int getColonPosition(String[] array){
-        for(int i=0;i<array.length;i++){
-            if(array[i].contains(":"))return i;
+    private static int getColonPosition(String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].contains(":")) return i;
         }
-        return  -1;
+        return -1;
     }
 
     public ArrayList<Boolean[]> parse(String permLine) {
-        ArrayList<Boolean[]> arrayList=new ArrayList<Boolean[]>();
-        Boolean[] read=new Boolean[]{false,false,false};
-        Boolean[] write=new Boolean[]{false,false,false};
-        Boolean[] execute=new Boolean[]{false,false,false};
+        ArrayList<Boolean[]> arrayList = new ArrayList<Boolean[]>();
+        Boolean[] read = new Boolean[]{false, false, false};
+        Boolean[] write = new Boolean[]{false, false, false};
+        Boolean[] execute = new Boolean[]{false, false, false};
         int owner = 0;
         if (permLine.charAt(1) == 'r') {
             owner += READ;
-            read[0]=true;
+            read[0] = true;
         }
         if (permLine.charAt(2) == 'w') {
             owner += WRITE;
-            write[0]=true;
+            write[0] = true;
         }
         if (permLine.charAt(3) == 'x') {
             owner += EXECUTE;
-            execute[0]=true;
+            execute[0] = true;
         }
         int group = 0;
         if (permLine.charAt(4) == 'r') {
             group += READ;
-            read[1]=true;
+            read[1] = true;
         }
         if (permLine.charAt(5) == 'w') {
             group += WRITE;
-            write[1]=true;
+            write[1] = true;
         }
         if (permLine.charAt(6) == 'x') {
             group += EXECUTE;
-            execute[1]=true;
+            execute[1] = true;
         }
         int world = 0;
         if (permLine.charAt(7) == 'r') {
             world += READ;
-            read[2]=true;
+            read[2] = true;
         }
         if (permLine.charAt(8) == 'w') {
             world += WRITE;
-            write[2]=true;
+            write[2] = true;
         }
         if (permLine.charAt(9) == 'x') {
             world += EXECUTE;
-            execute[2]=true;
+            execute[2] = true;
         }
         arrayList.add(read);
         arrayList.add(write);

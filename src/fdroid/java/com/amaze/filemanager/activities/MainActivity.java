@@ -1327,7 +1327,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     }
 
     public void openRar(String path) {
-        openZip(path);
     }
 
     public TabFragment getFragment() {

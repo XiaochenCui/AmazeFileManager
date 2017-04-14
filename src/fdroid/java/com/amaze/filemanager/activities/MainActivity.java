@@ -93,19 +93,16 @@ import com.amaze.filemanager.R;
 import com.amaze.filemanager.adapters.DrawerAdapter;
 import com.amaze.filemanager.database.Tab;
 import com.amaze.filemanager.database.TabHandler;
-import com.amaze.filemanager.exceptions.RootNotPermittedException;
 import com.amaze.filemanager.filesystem.BaseFile;
 import com.amaze.filemanager.filesystem.FileUtil;
 import com.amaze.filemanager.filesystem.HFile;
 import com.amaze.filemanager.filesystem.RootHelper;
 import com.amaze.filemanager.fragments.AppsList;
-import com.amaze.filemanager.fragments.FTPServerFragment;
 import com.amaze.filemanager.fragments.Main;
 import com.amaze.filemanager.fragments.ProcessViewer;
 import com.amaze.filemanager.fragments.SearchAsyncHelper;
 import com.amaze.filemanager.fragments.TabFragment;
 import com.amaze.filemanager.fragments.ZipViewer;
-import com.amaze.filemanager.fragments.preference_fragments.Preffrag;
 import com.amaze.filemanager.services.CopyService;
 import com.amaze.filemanager.services.DeleteTask;
 import com.amaze.filemanager.services.asynctasks.CopyFileCheck;
@@ -914,24 +911,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             menu.findItem(R.id.extract).setVisible(false);
             invalidatePasteButton(menu.findItem(R.id.paste));
             findViewById(R.id.buttonbarframe).setVisibility(View.VISIBLE);
-        } else if (f.contains("AppsList") || f.contains("ProcessViewer") ||
-                f.contains(FTPServerFragment.class.getName())) {
-            appBarLayout.setExpanded(true);
-            menu.findItem(R.id.sethome).setVisible(false);
-            if (indicator_layout != null) indicator_layout.setVisibility(View.GONE);
-            findViewById(R.id.buttonbarframe).setVisibility(View.GONE);
-            menu.findItem(R.id.search).setVisible(false);
-            menu.findItem(R.id.home).setVisible(false);
-            menu.findItem(R.id.history).setVisible(false);
-            menu.findItem(R.id.extract).setVisible(false);
-            if (f.contains("ProcessViewer")) menu.findItem(R.id.item10).setVisible(false);
-            else {
-                menu.findItem(R.id.dsort).setVisible(false);
-                menu.findItem(R.id.sortby).setVisible(false);
-            }
-            menu.findItem(R.id.hiddenitems).setVisible(false);
-            menu.findItem(R.id.view).setVisible(false);
-            menu.findItem(R.id.paste).setVisible(false);
         } else if (f.contains("ZipViewer")) {
             menu.findItem(R.id.sethome).setVisible(false);
             if (indicator_layout != null) indicator_layout.setVisibility(View.GONE);
@@ -1885,26 +1864,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             }
         });
 
-        View ftpButton = findViewById(R.id.ftpbutton);
-        if (getAppTheme().equals(AppTheme.DARK)) {
-            ftpButton.setBackgroundResource(R.drawable.safr_ripple_black);
-            ((ImageView) ftpButton.findViewById(R.id.ftpicon)).setImageResource(R.drawable.ic_ftp_dark);
-            ((TextView) ftpButton.findViewById(R.id.ftptext)).setTextColor(getResources().getColor(android.R.color.white));
-        }
-        ftpButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                android.support.v4.app.FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                transaction2.replace(R.id.content_frame, new FTPServerFragment());
-                findViewById(R.id.lin).animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                pending_fragmentTransaction = transaction2;
-                if (!isDrawerLocked) mDrawerLayout.closeDrawer(mDrawerLinear);
-                else onDrawerClosed();
-                select = -2;
-                adapter.toggleChecked(false);
-            }
-        });
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor((currentTab==1 ? skinTwo : skin))));
 
 

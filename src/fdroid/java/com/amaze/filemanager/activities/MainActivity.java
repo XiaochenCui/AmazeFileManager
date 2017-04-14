@@ -402,14 +402,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             mDrawerToggle.syncState();
-        }/*((ImageButton) findViewById(R.id.drawer_buttton)).setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDrawerLayout.isDrawerOpen(mDrawerLinear)) {
-                    mDrawerLayout.closeDrawer(mDrawerLinear);
-                } else mDrawerLayout.openDrawer(mDrawerLinear);
-            }
-        });*/
+        }
         if (mDrawerToggle != null) {
             mDrawerToggle.setDrawerIndicatorEnabled(true);
             mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_drawer_l);
@@ -441,17 +434,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             handler = new Handler(handlerThread.getLooper());
             shellInteractive = (new Shell.Builder()).useSU().setHandler(handler).open();
 
-            // check for busybox
-            /*try {
-                if (!RootUtils.isBusyboxAvailable()) {
-                    Toast.makeText(this, getString(R.string.error_busybox), Toast.LENGTH_LONG).show();
-                    closeInteractiveShell();
-                    Sp.edit().putBoolean(PreferenceUtils.KEY_ROOT, false).apply();
-                }
-            } catch (RootNotPermittedException e) {
-                e.printStackTrace();
-                Sp.edit().putBoolean(PreferenceUtils.KEY_ROOT, false).apply();
-            }*/
         }
     }
 

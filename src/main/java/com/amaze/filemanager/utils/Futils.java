@@ -1114,10 +1114,6 @@ public class Futils {
 
     }
 
-    public boolean isAtleastKitkat() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
     public void setPermissionsDialog(final View v, View but, final HFile file, final String f, final Main main) {
         final CheckBox readown = (CheckBox) v.findViewById(R.id.creadown);
         final CheckBox readgroup = (CheckBox) v.findViewById(R.id.creadgroup);

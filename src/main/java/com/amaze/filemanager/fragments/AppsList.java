@@ -35,7 +35,6 @@ import android.widget.Toast;
 import com.amaze.filemanager.R;
 import com.amaze.filemanager.activities.MainActivity;
 import com.amaze.filemanager.adapters.AppsAdapter;
-import com.amaze.filemanager.services.asynctasks.AppListLoader;
 import com.amaze.filemanager.ui.Layoutelements;
 import com.amaze.filemanager.ui.icons.IconHolder;
 import com.amaze.filemanager.utils.provider.UtilitiesProviderInterface;
@@ -148,9 +147,8 @@ public class AppsList extends ListFragment implements LoaderManager.LoaderCallba
         }
     }
 
-    @Override
     public Loader<List<Layoutelements>> onCreateLoader(int id, Bundle args) {
-        return new AppListLoader(getContext(), sortby, asc);
+        return null;
     }
 
     @Override

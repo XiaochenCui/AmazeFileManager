@@ -72,7 +72,6 @@ public class SmbSearchDialog extends DialogFragment {
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     dismiss();
                     MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.showSMBDialog("", "", false);
                 }
             }
         });
@@ -156,7 +155,6 @@ public class SmbSearchDialog extends DialogFragment {
                         if (getActivity() != null && getActivity() instanceof MainActivity) {
                             dismiss();
                             MainActivity mainActivity = (MainActivity) getActivity();
-                            mainActivity.showSMBDialog(listviewadapter.getItem(p).name, listviewadapter.getItem(p).addr, false);
                         }
                     }
                 });

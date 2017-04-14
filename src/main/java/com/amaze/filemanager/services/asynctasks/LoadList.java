@@ -109,24 +109,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         }
 
         switch (openmode) {
-            case SMB:
-                HFile hFile = new HFile(OpenMode.SMB, path);
-                try {
-                    SmbFile[] smbFile = hFile.getSmbFile(5000).listFiles();
-                    list = ma.addToSmb(smbFile, path);
-                    openmode = OpenMode.SMB;
-                } catch (SmbAuthException e) {
-                    if(!e.getMessage().toLowerCase().contains("denied"))
-                        ma.reauthenticateSmb();
-                    publishProgress(e.getLocalizedMessage());
-                } catch (SmbException e) {
-                    publishProgress(e.getLocalizedMessage());
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
-                    publishProgress(e.getLocalizedMessage());
-                    e.printStackTrace();
-                }
-                break;
             case CUSTOM:
                 ArrayList<BaseFile> arrayList = null;
                 switch (Integer.parseInt(path)) {

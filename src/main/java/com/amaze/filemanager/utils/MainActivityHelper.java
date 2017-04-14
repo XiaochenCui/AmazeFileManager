@@ -140,13 +140,6 @@ public class MainActivityHelper {
                 final String path1 = ma.CURRENT_PATH;
                 mkfile(ma.openMode,path1,ma);
                 break;
-            case 2:
-                SmbSearchDialog smbDialog=new SmbSearchDialog();
-                smbDialog.show(mainActivity.getFragmentManager(),"tab");
-                break;
-            /*case 3:
-                mainActivity.bindDrive();
-                break;*/
         }
     }
 

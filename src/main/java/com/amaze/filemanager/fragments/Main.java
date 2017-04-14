@@ -90,7 +90,6 @@ import com.amaze.filemanager.utils.FileListSorter;
 import com.amaze.filemanager.utils.Futils;
 import com.amaze.filemanager.utils.MainActivityHelper;
 import com.amaze.filemanager.utils.OpenMode;
-import com.amaze.filemanager.utils.SmbStreamer.Streamer;
 import com.amaze.filemanager.utils.color.ColorUsage;
 import com.amaze.filemanager.utils.provider.UtilitiesProviderInterface;
 import com.amaze.filemanager.utils.theme.AppTheme;
@@ -156,7 +155,6 @@ public class Main extends android.support.v4.app.Fragment {
     View nofilesview;
     DisplayMetrics displayMetrics;
     HFile f;
-    Streamer s;
     private View rootView;
     private View actionModeView;
     private FastScroller fastScroller;
@@ -418,7 +416,6 @@ public class Main extends android.support.v4.app.Fragment {
             folder_count = savedInstanceState.getInt("folder_count", 0);
             file_count = savedInstanceState.getInt("file_count", 0);
             results = savedInstanceState.getBoolean("results");
-            MAIN_ACTIVITY.updatePath(CURRENT_PATH, results, openMode, folder_count, file_count);
             createViews(LIST_ELEMENTS, true, (CURRENT_PATH), openMode, results, !IS_LIST);
             if (savedInstanceState.getBoolean("selection")) {
 
@@ -874,25 +871,6 @@ public class Main extends android.support.v4.app.Fragment {
                 if (LIST_ELEMENTS.get(position).isDirectory()) {
                     computeScroll();
                     loadlist(path, false, openMode);
-                } else {
-                    if (l.getMode() == OpenMode.SMB) {
-                        try {
-                            SmbFile smbFile = new SmbFile(l.getDesc());
-                            launch(smbFile, l.getlongSize());
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (l.getMode() == OpenMode.OTG) {
-
-                        utils.openFile(RootHelper.getDocumentFile(l.getDesc(), getContext(), false),
-                                (MainActivity) getActivity());
-                    } else if (MAIN_ACTIVITY.mReturnIntent) {
-                        returnIntentResults(new File(l.getDesc()));
-                    } else {
-
-                        utils.openFile(new File(l.getDesc()), (MainActivity) getActivity());
-                    }
-                    DataUtils.addHistoryFile(l.getDesc());
                 }
             } else {
 
@@ -1213,24 +1191,6 @@ public class Main extends android.support.v4.app.Fragment {
         }
     }
 
-    public void reauthenticateSmb() {
-        if (smbPath != null) {
-            try {
-                MAIN_ACTIVITY.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int i = -1;
-                        if ((i = DataUtils.containsServer(smbPath)) != -1) {
-                            MAIN_ACTIVITY.showSMBDialog(DataUtils.getServers().get(i)[0], smbPath, true);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void goBackItemClick() {
         if (openMode == OpenMode.CUSTOM) {
             loadlist(home, false, OpenMode.FILE);
@@ -1473,46 +1433,6 @@ public class Main extends android.support.v4.app.Fragment {
                 mFullPath.setText(MAIN_ACTIVITY.getString(R.string.searchresults));
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void launch(final SmbFile smbFile, final long si) {
-        s = Streamer.getInstance();
-        new Thread() {
-            public void run() {
-                try {
-                    /*List<SmbFile> subtitleFiles = new ArrayList<SmbFile>();
-
-                    // finding subtitles
-                    for (Layoutelements layoutelement : LIST_ELEMENTS) {
-                        SmbFile smbFile = new SmbFile(layoutelement.getDesc());
-                        if (smbFile.getName().contains(smbFile.getName())) subtitleFiles.add(smbFile);
-                    }*/
-
-                    s.setStreamSrc(smbFile, si);
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            try {
-                                Uri uri = Uri.parse(Streamer.URL + Uri.fromFile(new File(Uri.parse(smbFile.getPath()).getPath())).getEncodedPath());
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setDataAndType(uri, MimeTypes.getMimeType(new File(smbFile.getPath())));
-                                PackageManager packageManager = getActivity().getPackageManager();
-                                List<ResolveInfo> resInfos = packageManager.queryIntentActivities(i, 0);
-                                if (resInfos != null && resInfos.size() > 0)
-                                    startActivity(i);
-                                else
-                                    Toast.makeText(getActivity(),
-                                            getString(R.string.smb_launch_error), Toast.LENGTH_SHORT).show();
-                            } catch (ActivityNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
     }
 
     @Override

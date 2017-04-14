@@ -148,9 +148,6 @@ public class DrawerAdapter extends ArrayAdapter<Item> {
                         if(DataUtils.containsBooks(new String[]{item.getTitle(),path})!=-1){
                             m.renameBookmark((item).getTitle(),path);
                         }
-                        else if (path.startsWith("smb:/")) {
-                            m.showSMBDialog(item.getTitle(),path, true);
-                        }
                     } else if(position<m.storage_count ){
                         String path = ((EntryItem) getItem(position)).getPath();
                         if(!path.equals("/"))

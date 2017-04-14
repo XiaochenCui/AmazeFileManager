@@ -105,8 +105,6 @@ import com.amaze.filemanager.services.asynctasks.CopyFileCheck;
 import com.amaze.filemanager.services.asynctasks.MoveFiles;
 import com.amaze.filemanager.ui.dialogs.RenameBookmark;
 import com.amaze.filemanager.ui.dialogs.RenameBookmark.BookmarkCallback;
-import com.amaze.filemanager.ui.dialogs.SmbConnectDialog;
-import com.amaze.filemanager.ui.dialogs.SmbConnectDialog.SmbConnectionListener;
 import com.amaze.filemanager.ui.drawer.EntryItem;
 import com.amaze.filemanager.ui.drawer.Item;
 import com.amaze.filemanager.ui.drawer.SectionItem;
@@ -141,7 +139,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 
 public class MainActivity extends BaseActivity implements OnRequestPermissionsResultCallback,
-        SmbConnectionListener, DataChangeListener, BookmarkCallback,
+        DataChangeListener, BookmarkCallback,
         SearchAsyncHelper.HelperCallbacks {
 
     final Pattern DIR_SEPARATOR = Pattern.compile("/");
@@ -824,7 +822,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 Main ma = ((Main) tabFragment.getTab());
                 if (ma.IS_LIST) s.setTitle(R.string.gridview);
                 else s.setTitle(R.string.listview);
-                updatePath(ma.CURRENT_PATH, ma.results, ma.openMode, ma.folder_count, ma.file_count);
             } catch (Exception e) {
             }
 
@@ -1884,230 +1881,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         }).run();
     }
 
-    public void updatePath(@NonNull final String news, boolean results, OpenMode
-            openmode, int folder_count, int file_count) {
-
-        if (news.length() == 0) return;
-        if (news == null) return;
-        if (openmode == OpenMode.SMB && news.startsWith("smb:/"))
-            newPath = mainActivityHelper.parseSmbPath(news);
-        else if (openmode == OpenMode.CUSTOM)
-            newPath = mainActivityHelper.getIntegralNames(news);
-        else newPath = news;
-        final TextView bapath = (TextView) pathbar.findViewById(R.id.fullpath);
-        final TextView animPath = (TextView) pathbar.findViewById(R.id.fullpath_anim);
-        TextView textView = (TextView) pathbar.findViewById(R.id.pathname);
-        if (!results) {
-            textView.setText(folder_count + " " + getResources().getString(R.string.folders) + "" +
-                    " " + file_count + " " + getResources().getString(R.string.files));
-        } else {
-            bapath.setText(R.string.searchresults);
-            textView.setText(R.string.empty);
-            return;
-        }
-        final String oldPath = bapath.getText().toString();
-        if (oldPath != null && oldPath.equals(newPath)) return;
-
-        // implement animation while setting text
-        newPathBuilder = new StringBuffer().append(newPath);
-        oldPathBuilder = new StringBuffer().append(oldPath);
-
-        final Animation slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in);
-        Animation slideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out);
-
-        if (newPath.length() > oldPath.length() &&
-                newPathBuilder.delete(oldPath.length(), newPath.length()).toString().equals(oldPath) &&
-                oldPath.length() != 0) {
-
-            // navigate forward
-            newPathBuilder.delete(0, newPathBuilder.length());
-            newPathBuilder.append(newPath);
-            newPathBuilder.delete(0, oldPath.length());
-            animPath.setAnimation(slideIn);
-            animPath.animate().setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            animPath.setVisibility(View.GONE);
-                            bapath.setText(newPath);
-                        }
-                    }, PATH_ANIM_END_DELAY);
-                }
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    animPath.setVisibility(View.VISIBLE);
-                    animPath.setText(newPathBuilder.toString());
-                    //bapath.setText(oldPath);
-
-                    scroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll1.fullScroll(View.FOCUS_RIGHT);
-                        }
-                    });
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    super.onAnimationCancel(animation);
-                    //onAnimationEnd(animation);
-                }
-            }).setStartDelay(PATH_ANIM_START_DELAY).start();
-        } else if (newPath.length() < oldPath.length() &&
-                oldPathBuilder.delete(newPath.length(), oldPath.length()).toString().equals(newPath)) {
-
-            // navigate backwards
-            oldPathBuilder.delete(0, oldPathBuilder.length());
-            oldPathBuilder.append(oldPath);
-            oldPathBuilder.delete(0, newPath.length());
-            animPath.setAnimation(slideOut);
-            animPath.animate().setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    animPath.setVisibility(View.GONE);
-                    bapath.setText(newPath);
-
-                    scroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll1.fullScroll(View.FOCUS_RIGHT);
-                        }
-                    });
-                }
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    animPath.setVisibility(View.VISIBLE);
-                    animPath.setText(oldPathBuilder.toString());
-                    bapath.setText(newPath);
-
-                    scroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll1.fullScroll(View.FOCUS_LEFT);
-                        }
-                    });
-                }
-            }).setStartDelay(PATH_ANIM_START_DELAY).start();
-        } else if (oldPath.isEmpty()) {
-
-            // case when app starts
-            // FIXME: COUNTER is incremented twice on app startup
-            COUNTER++;
-            if (COUNTER == 2) {
-
-                animPath.setAnimation(slideIn);
-                animPath.setText(newPath);
-                animPath.animate().setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        super.onAnimationStart(animation);
-                        animPath.setVisibility(View.VISIBLE);
-                        bapath.setText("");
-                        scroll.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                scroll1.fullScroll(View.FOCUS_RIGHT);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                animPath.setVisibility(View.GONE);
-                                bapath.setText(newPath);
-                            }
-                        }, PATH_ANIM_END_DELAY);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        super.onAnimationCancel(animation);
-                        //onAnimationEnd(animation);
-                    }
-                }).setStartDelay(PATH_ANIM_START_DELAY).start();
-            }
-
-        } else {
-
-            // completely different path
-            // first slide out of old path followed by slide in of new path
-            animPath.setAnimation(slideOut);
-            animPath.animate().setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    super.onAnimationStart(animator);
-                    animPath.setVisibility(View.VISIBLE);
-                    animPath.setText(oldPath);
-                    bapath.setText("");
-
-                    scroll.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scroll1.fullScroll(View.FOCUS_LEFT);
-                        }
-                    });
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    super.onAnimationEnd(animator);
-
-                    //animPath.setVisibility(View.GONE);
-                    animPath.setText(newPath);
-                    bapath.setText("");
-                    animPath.setAnimation(slideIn);
-
-                    animPath.animate().setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    animPath.setVisibility(View.GONE);
-                                    bapath.setText(newPath);
-                                }
-                            }, PATH_ANIM_END_DELAY);
-                        }
-
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            super.onAnimationStart(animation);
-                            // we should not be having anything here in path bar
-                            animPath.setVisibility(View.VISIBLE);
-                            bapath.setText("");
-                            scroll.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    scroll1.fullScroll(View.FOCUS_RIGHT);
-                                }
-                            });
-                        }
-                    }).start();
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    super.onAnimationCancel(animation);
-                    //onAnimationEnd(animation);
-                }
-            }).setStartDelay(PATH_ANIM_START_DELAY).start();
-        }
-    }
-
     public int dpToPx(double dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int px = Math.round(Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)));
@@ -2349,70 +2122,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             }
 
         }
-    }
-
-
-    public void showSMBDialog(String name, String path, boolean edit) {
-        if (path.length() > 0 && name.length() == 0) {
-            int i = -1;
-            if ((i = DataUtils.containsServer(new String[]{name, path})) != -1) {
-                name = DataUtils.servers.get(i)[0];
-            }
-        }
-        SmbConnectDialog smbConnectDialog = new SmbConnectDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString("name", name);
-        bundle.putString("path", path);
-        bundle.putBoolean("edit", edit);
-        smbConnectDialog.setArguments(bundle);
-        smbConnectDialog.show(getFragmentManager(), "smbdailog");
-    }
-
-    @Override
-    public void addConnection(boolean edit, String name, String path, String oldname, String oldPath) {
-        try {
-            String[] s = new String[]{name, path};
-            if (!edit) {
-                if ((DataUtils.containsServer(path)) == -1) {
-                    DataUtils.addServer(new String[]{name, path});
-                    refreshDrawer();
-                    grid.addPath(name, path, DataUtils.SMB, 1);
-                    TabFragment fragment = getFragment();
-                    if (fragment != null) {
-                        Fragment fragment1 = fragment.getTab();
-                        if (fragment1 != null) {
-                            final Main ma = (Main) fragment1;
-                            ma.loadlist(path, false, OpenMode.UNKNOWN);
-                        }
-                    }
-                } else
-                    Snackbar.make(frameLayout, "Connection already exists", Snackbar.LENGTH_SHORT).show();
-            } else {
-                int i = -1;
-                if ((i = DataUtils.containsServer(new String[]{oldname, oldPath})) != -1) {
-                    DataUtils.removeServer(i);
-                    mainActivity.grid.removePath(oldname, oldPath, DataUtils.SMB);
-                }
-                DataUtils.addServer(s);
-                Collections.sort(DataUtils.servers, new BookSorter());
-                mainActivity.refreshDrawer();
-                mainActivity.grid.addPath(s[0], s[1], DataUtils.SMB, 1);
-            }
-        } catch (Exception e) {
-            Toast.makeText(mainActivity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void deleteConnection(String name, String path) {
-        int i = -1;
-        if ((i = DataUtils.containsServer(new String[]{name, path})) != -1) {
-            DataUtils.removeServer(i);
-            grid.removePath(name, path, DataUtils.SMB);
-            refreshDrawer();
-        }
-
     }
 
     @Override

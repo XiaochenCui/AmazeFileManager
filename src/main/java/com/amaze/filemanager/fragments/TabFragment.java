@@ -226,8 +226,6 @@ public class TabFragment extends android.support.v4.app.Fragment
                 Main m=(Main)fragment;
                 items.add(parsePathForName(m.CURRENT_PATH,m.openMode));
                 if(i-1==MainActivity.currentTab && i==pos){
-                    mainActivity.updatePath(m.CURRENT_PATH,m.results,m.openMode,m
-                            .folder_count,m.file_count);
                     mainActivity.updateDrawer(m.CURRENT_PATH);
                 }
                 if(m.openMode==OpenMode.FILE) {
@@ -313,8 +311,6 @@ public class TabFragment extends android.support.v4.app.Fragment
                 if (ma.CURRENT_PATH != null) {
                     try {
                         mainActivity.updateDrawer(ma.CURRENT_PATH);
-                        mainActivity.updatePath(ma.CURRENT_PATH,  ma.results,ma.openMode,
-                                ma.folder_count, ma.file_count);
                         if (buttons.getVisibility() == View.VISIBLE) {
                             mainActivity.bbar(ma);
                         }

@@ -31,7 +31,6 @@ import com.amaze.filemanager.fragments.TabFragment;
 import com.amaze.filemanager.services.DeleteTask;
 import com.amaze.filemanager.services.ExtractService;
 import com.amaze.filemanager.services.ZipTask;
-import com.amaze.filemanager.ui.dialogs.SmbSearchDialog;
 
 import java.io.File;
 import java.util.ArrayList;

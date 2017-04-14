@@ -87,18 +87,7 @@
             </intent-filter>
 
         </activity>
-		<activity
-            android:label="@string/textreader"
-            android:name=".activities.TextReader"
-			android:theme="@style/appCompatLight">
-            <intent-filter
-                android:label="Amaze Text Editor">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/*" />
-            </intent-filter>
 
-        </activity>
         <activity
             android:label="@string/databasereader"
             android:name=".activities.DbViewer"

@@ -26,7 +26,6 @@ import com.amaze.filemanager.activities.MainActivity;
 import com.amaze.filemanager.adapters.RecyclerArrayAdapter;
 import com.amaze.filemanager.utils.Computer;
 import com.amaze.filemanager.utils.PreferenceUtils;
-import com.amaze.filemanager.utils.SubnetScanner;
 import com.amaze.filemanager.utils.provider.UtilitiesProviderInterface;
 import com.amaze.filemanager.utils.theme.AppTheme;
 
@@ -43,7 +42,6 @@ public class SmbSearchDialog extends DialogFragment {
     ArrayList<Computer> computers = new ArrayList<>();
     SharedPreferences Sp;
     int fabskin;
-    SubnetScanner subnetScanner;
     Context context;
 
     @Override
@@ -57,13 +55,6 @@ public class SmbSearchDialog extends DialogFragment {
     }
 
     @Override
-    public void dismiss() {
-        super.dismiss();
-        if (subnetScanner != null)
-            subnetScanner.interrupt();
-    }
-
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
         builder.title(R.string.searchingdevices);
@@ -72,16 +63,12 @@ public class SmbSearchDialog extends DialogFragment {
         builder.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (subnetScanner != null)
-                    subnetScanner.interrupt();
                 dismiss();
             }
         });
         builder.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if (subnetScanner != null)
-                    subnetScanner.interrupt();
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     dismiss();
                     MainActivity mainActivity = (MainActivity) getActivity();
@@ -93,42 +80,6 @@ public class SmbSearchDialog extends DialogFragment {
         builder.positiveColor(fabskin);
         computers.add(new Computer("-1", "-1"));
         listviewadapter = new Listviewadapter(getActivity(), R.layout.smb_computers_row, computers);
-        subnetScanner = new SubnetScanner(getActivity());
-        subnetScanner.setObserver(new SubnetScanner.ScanObserver() {
-            @Override
-            public void computerFound(final Computer computer) {
-                if (getActivity() != null)
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!computers.contains(computer))
-                                computers.add(computers.size() - 1, computer);
-                            listviewadapter.notifyDataSetChanged();
-                        }
-                    });
-            }
-
-            @Override
-            public void searchFinished() {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (computers.size() == 1) {
-                                dismiss();
-                                Toast.makeText(getActivity(), R.string.nodevicefound, Toast.LENGTH_SHORT).show();
-                                MainActivity mainActivity = (MainActivity) getActivity();
-                                mainActivity.showSMBDialog("", "", false);
-                                return;
-                            }
-                            computers.remove(computers.size() - 1);
-                            listviewadapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            }
-        });
-        subnetScanner.start();
 
         builder.adapter(listviewadapter, null);
         return builder.build();
@@ -202,8 +153,6 @@ public class SmbSearchDialog extends DialogFragment {
                 rootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (subnetScanner != null)
-                            subnetScanner.interrupt();
                         if (getActivity() != null && getActivity() instanceof MainActivity) {
                             dismiss();
                             MainActivity mainActivity = (MainActivity) getActivity();

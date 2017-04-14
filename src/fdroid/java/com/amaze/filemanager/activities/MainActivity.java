@@ -974,9 +974,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 });
                 a.build().show();
                 break;
-            case R.id.hiddenitems:
-                utils.showHiddenDialog(ma, getAppTheme());
-                break;
             case R.id.view:
                 if (ma.IS_LIST) {
                     if (DataUtils.listfiles.contains(ma.CURRENT_PATH)) {

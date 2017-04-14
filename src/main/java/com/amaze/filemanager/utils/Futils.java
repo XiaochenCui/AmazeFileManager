@@ -1098,22 +1098,6 @@ public class Futils {
         a.build().show();
     }
 
-    public void showHiddenDialog(final Main m, AppTheme appTheme) {
-        final MaterialDialog.Builder a = new MaterialDialog.Builder(m.getActivity());
-        a.positiveText(R.string.cancel);
-        a.positiveColor(Color.parseColor(BaseActivity.accentSkin));
-        a.title(R.string.hiddenfiles);
-        a.theme(appTheme.getMaterialDialogTheme());
-        a.autoDismiss(true);
-        HiddenAdapter adapter = new HiddenAdapter(m.getActivity(), m, this, R.layout.bookmarkrow, toHFileArray(DataUtils.getHiddenfiles()), null, false);
-        a.adapter(adapter, null);
-        a.dividerColor(Color.GRAY);
-        MaterialDialog x = a.build();
-        adapter.updateDialog(x);
-        x.show();
-
-    }
-
     public void setPermissionsDialog(final View v, View but, final HFile file, final String f, final Main main) {
         final CheckBox readown = (CheckBox) v.findViewById(R.id.creadown);
         final CheckBox readgroup = (CheckBox) v.findViewById(R.id.creadgroup);

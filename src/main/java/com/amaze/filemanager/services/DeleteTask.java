@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.amaze.filemanager.R;
 import com.amaze.filemanager.exceptions.RootNotPermittedException;
 import com.amaze.filemanager.filesystem.RootHelper;
-import com.amaze.filemanager.fragments.ZipViewer;
 import com.amaze.filemanager.filesystem.BaseFile;
 import com.amaze.filemanager.utils.Futils;
 
@@ -43,17 +42,10 @@ public class DeleteTask extends AsyncTask<ArrayList<BaseFile>, String, Boolean> 
     ContentResolver contentResolver;
     Context cd;
     boolean rootMode;
-    ZipViewer zipViewer;
 
     public DeleteTask(ContentResolver c, Context cd) {
         this.cd = cd;
         rootMode = PreferenceManager.getDefaultSharedPreferences(cd).getBoolean("rootmode", false);
-    }
-
-    public DeleteTask(ContentResolver c, Context cd, ZipViewer zipViewer) {
-        this.cd = cd;
-        rootMode = PreferenceManager.getDefaultSharedPreferences(cd).getBoolean("rootmode", false);
-        this.zipViewer = zipViewer;
     }
 
     @Override
@@ -65,16 +57,16 @@ public class DeleteTask extends AsyncTask<ArrayList<BaseFile>, String, Boolean> 
     protected Boolean doInBackground(ArrayList<BaseFile>... p1) {
         files = p1[0];
         boolean b = true;
-        if(files.size()==0)return true;
+        if (files.size() == 0) return true;
 
         if (files.get(0).isOtgFile()) {
             for (BaseFile a : files) {
                 DocumentFile documentFile = RootHelper.getDocumentFile(a.getPath(), cd, false);
-                 b = documentFile.delete();
+                b = documentFile.delete();
             }
         } else {
 
-            for(BaseFile a : files)
+            for (BaseFile a : files)
                 try {
                     (a).delete(cd, rootMode);
                 } catch (RootNotPermittedException e) {
@@ -88,32 +80,11 @@ public class DeleteTask extends AsyncTask<ArrayList<BaseFile>, String, Boolean> 
 
     @Override
     public void onPostExecute(Boolean b) {
-        Intent intent = new Intent("loadlist");
-        cd.sendBroadcast(intent);
-
-        if(!files.get(0).isSmb()) {
-            try {
-                for (BaseFile f : files) {
-                    delete(cd,f.getPath());
-                }
-            } catch (Exception e) {
-                for (BaseFile f : files) {
-                    Futils.scanFile(f.getPath(), cd);
-                }
-            }
-        }if (!b) {
-            Toast.makeText(cd, cd.getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
-        } else if (zipViewer==null) {
-            Toast.makeText(cd, cd.getResources().getString(R.string.done), Toast.LENGTH_SHORT).show();
-        }
-        if (zipViewer!=null) {
-            zipViewer.files.clear();
-        }
     }
 
     void delete(final Context context, final String file) {
         final String where = MediaStore.MediaColumns.DATA + "=?";
-        final String[] selectionArgs = new String[] {
+        final String[] selectionArgs = new String[]{
                 file
         };
         final ContentResolver contentResolver = context.getContentResolver();

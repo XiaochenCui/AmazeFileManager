@@ -6,8 +6,6 @@ package com.amaze.filemanager.services.asynctasks;
 
 import android.os.AsyncTask;
 
-import com.amaze.filemanager.fragments.ZipViewer;
-import com.amaze.filemanager.utils.Futils;
 import com.github.junrar.Archive;
 import com.github.junrar.rarfile.FileHeader;
 
@@ -21,7 +19,6 @@ import java.util.Comparator;
  */
 public class RarHelperTask extends AsyncTask<File, Void, ArrayList<FileHeader>> {
 
-    ZipViewer zipViewer;
     String dir;
 
     /**
@@ -29,62 +26,18 @@ public class RarHelperTask extends AsyncTask<File, Void, ArrayList<FileHeader>> 
      * @param zipViewer the zipViewer fragment instance
      * @param dir
      */
-    public RarHelperTask(ZipViewer zipViewer, String dir) {
-
-        this.zipViewer = zipViewer;
-        this.dir = dir;
-    }
 
     @Override
     protected void onPreExecute() {
-        super.onPreExecute();
-
-        zipViewer.swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     protected ArrayList<FileHeader> doInBackground(File... params) {
-        ArrayList<FileHeader> elements = new ArrayList<FileHeader>();
-        try {
-            Archive zipfile = new Archive(params[0]);
-            zipViewer.archive = zipfile;
-            if (zipViewer.wholelistRar.size() == 0) {
-
-                FileHeader fh = zipfile.nextFileHeader();
-                while (fh != null) {
-                    zipViewer.wholelistRar.add(fh);
-                    fh = zipfile.nextFileHeader();
-                }
-            }
-            if (dir == null || dir.trim().length() == 0 || dir.equals("")) {
-
-                for (FileHeader header : zipViewer.wholelistRar) {
-                    String name = header.getFileNameString();
-
-                    if (!name.contains("\\")) {
-                        elements.add(header);
-
-                    }
-                }
-            } else {
-                for (FileHeader header : zipViewer.wholelistRar) {
-                    String name = header.getFileNameString();
-                    if (name.substring(0, name.lastIndexOf("\\")).equals(dir)) {
-                        elements.add(header);
-                    }
-                }
-            }
-        } catch (Exception e) {
-        }
-        Collections.sort(elements, new FileListSorter());
-        return elements;
+        return null;
     }
 
     @Override
     protected void onPostExecute(ArrayList<FileHeader> zipEntries) {
-        super.onPostExecute(zipEntries);
-        zipViewer.swipeRefreshLayout.setRefreshing(false);
-        zipViewer.createRarviews(zipEntries, dir);
     }
 
     class FileListSorter implements Comparator<FileHeader> {

@@ -29,7 +29,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -60,7 +59,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -102,7 +100,6 @@ import com.amaze.filemanager.fragments.Main;
 import com.amaze.filemanager.fragments.ProcessViewer;
 import com.amaze.filemanager.fragments.SearchAsyncHelper;
 import com.amaze.filemanager.fragments.TabFragment;
-import com.amaze.filemanager.fragments.ZipViewer;
 import com.amaze.filemanager.services.CopyService;
 import com.amaze.filemanager.services.DeleteTask;
 import com.amaze.filemanager.services.asynctasks.CopyFileCheck;
@@ -126,7 +123,6 @@ import com.amaze.filemanager.utils.HistoryManager;
 import com.amaze.filemanager.utils.MainActivityHelper;
 import com.amaze.filemanager.utils.OpenMode;
 import com.amaze.filemanager.utils.PreferenceUtils;
-import com.amaze.filemanager.utils.RootUtils;
 import com.amaze.filemanager.utils.ServiceWatcherUtil;
 import com.amaze.filemanager.utils.color.ColorUsage;
 import com.amaze.filemanager.utils.theme.AppTheme;
@@ -587,29 +583,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                     Fragment fragment1 = tabFragment.getTab();
                     Main main = (Main) fragment1;
                     main.goBack();
-                }
-            } else if (name.contains("ZipViewer")) {
-                ZipViewer zipViewer = (ZipViewer) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (zipViewer.mActionMode == null) {
-                    if (zipViewer.cangoBack()) {
-
-                        zipViewer.goBack();
-                    } else if (openzip) {
-                        openzip = false;
-                        finish();
-                    } else {
-
-                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(R.anim.slide_out_bottom, R.anim.slide_out_bottom);
-                        fragmentTransaction.remove(zipViewer);
-                        fragmentTransaction.commit();
-                        supportInvalidateOptionsMenu();
-                        floatingActionButton.setVisibility(View.VISIBLE);
-                        floatingActionButton.showMenuButton(true);
-
-                    }
-                } else {
-                    zipViewer.mActionMode.finish();
                 }
             } else
                 goToMain("");
@@ -1099,9 +1072,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 invalidatePasteButton(item);
                 break;
             case R.id.extract:
-                Fragment fragment1 = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (fragment1.getClass().getName().contains("ZipViewer"))
-                    mainActivityHelper.extractFile(((ZipViewer) fragment1).f);
                 break;
             case R.id.search:
                 View searchItem = toolbar.findViewById(R.id.search);
@@ -1384,11 +1354,8 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         findViewById(R.id.lin).animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_in_bottom);
-        Fragment zipFragment = new ZipViewer();
         Bundle bundle = new Bundle();
         bundle.putString("path", path);
-        zipFragment.setArguments(bundle);
-        fragmentTransaction.add(R.id.content_frame, zipFragment);
         fragmentTransaction.commitAllowingStateLoss();
     }
 
@@ -1534,9 +1501,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             }
             // If not confirmed SAF, or if still not writable, then revert settings.
             if (responseCode != Activity.RESULT_OK) {
-               /* DialogUtil.displayError(getActivity(), R.string.message_dialog_cannot_write_to_folder_saf, false,
-                        currentFolder);||!FileUtil.isWritableNormalOrSaf(currentFolder)
-*/
                 if (treeUri != null) Sp.edit().putString("URI", oldUri.toString()).commit();
                 return;
             }

@@ -65,7 +65,6 @@ import com.xiaochen.videoplayer.filesystem.BaseFile;
 import com.xiaochen.videoplayer.filesystem.HFile;
 import com.xiaochen.videoplayer.filesystem.RootHelper;
 import com.xiaochen.videoplayer.fragments.Main;
-import com.xiaochen.videoplayer.services.asynctasks.GenerateMD5Task;
 import com.xiaochen.videoplayer.ui.Layoutelements;
 import com.xiaochen.videoplayer.ui.icons.Icons;
 import com.xiaochen.videoplayer.ui.icons.MimeTypes;
@@ -683,67 +682,6 @@ public class Futils {
         return inSampleSize;
     }
 
-    public void showProps(final BaseFile hFile, final String perm, final Main c, boolean root, AppTheme appTheme) {
-        long last = hFile.getDate();
-        String date = getdate(last);
-        String items = c.getResources().getString(R.string.calculating), size = c.getResources().getString(R.string.calculating), name, parent;
-        name = hFile.getName();
-        parent = hFile.getReadablePath(hFile.getParent());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c.getActivity());
-        String fabskin = PreferenceUtils.getAccentString(sp);
-        MaterialDialog.Builder a = new MaterialDialog.Builder(c.getActivity());
-        a.title(c.getResources().getString(R.string.properties));
-        a.theme(appTheme.getMaterialDialogTheme());
-        View v = c.getActivity().getLayoutInflater().inflate(R.layout.properties_dialog, null);
-        AppCompatButton appCompatButton = (AppCompatButton) v.findViewById(R.id.appX);
-        appCompatButton.setAllCaps(true);
-        final View permtabl = v.findViewById(R.id.permtable);
-        final View but = v.findViewById(R.id.set);
-        if (root && perm.length() > 6) {
-            appCompatButton.setVisibility(View.VISIBLE);
-            appCompatButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (permtabl.getVisibility() == View.GONE) {
-                        permtabl.setVisibility(View.VISIBLE);
-                        but.setVisibility(View.VISIBLE);
-                        setPermissionsDialog(permtabl, but, hFile, perm, c);
-                    } else {
-                        but.setVisibility(View.GONE);
-                        permtabl.setVisibility(View.GONE);
-
-                    }
-                }
-            });
-        }
-        a.customView(v, true);
-        a.positiveText(R.string.copy_path);
-        a.negativeText(c.getResources().getString(R.string.md5_2));
-        a.positiveColor(Color.parseColor(fabskin));
-        a.negativeColor(Color.parseColor(fabskin));
-        a.neutralText(R.string.cancel);
-        a.neutralColor(Color.parseColor(fabskin));
-        a.callback(new MaterialDialog.ButtonCallback() {
-            @Override
-            public void onPositive(MaterialDialog materialDialog) {
-                ((MainActivity) c.getActivity()).copyToClipboard(c.getActivity(), hFile.getPath());
-                Toast.makeText(c.getActivity(), c.getResources().getString(R.string.pathcopied), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNegative(MaterialDialog materialDialog) {
-            }
-        });
-        MaterialDialog materialDialog = a.build();
-        materialDialog.show();
-        /*View bottomSheet = c.findViewById(R.id.design_bottom_sheet);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.STATE_DRAGGING);*/
-        new GenerateMD5Task(materialDialog, hFile, name, parent, size, items, date, c.getActivity()
-                , v).execute(hFile.getPath());
-    }
-
     public static long[] getSpaces(HFile hFile) {
         if (!hFile.isSmb() && hFile.isDirectory()) {
             try {
@@ -756,49 +694,6 @@ public class Futils {
             }
         }
         return new long[]{-1, -1, -1};
-    }
-
-    public void showProps(final HFile f, final Activity c, AppTheme appTheme) {
-        String date = null;
-        try {
-            date = getdate(f.lastModified());
-        } catch (MalformedURLException | SmbException e) {
-            e.printStackTrace();
-        }
-
-        String items = c.getResources().getString(R.string.calculating), size = c.getResources().getString(R.string.calculating), name, parent;
-        name = f.getName();
-        parent = f.getReadablePath(f.getParent());
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        String fabskin = PreferenceUtils.getAccentString(sp);
-
-        View v = c.getLayoutInflater().inflate(R.layout.properties_dialog, null);
-        v.findViewById(R.id.appX).setVisibility(View.GONE);
-
-        MaterialDialog materialDialog = new MaterialDialog.Builder(c)
-                .title(c.getResources().getString(R.string.properties))
-                .theme(appTheme.getMaterialDialogTheme())
-                .customView(v, true)
-                .positiveText(R.string.copy_path)
-                .negativeText(c.getResources().getString(R.string.md5_2))
-                .positiveColor(Color.parseColor(fabskin))
-                .negativeColor(Color.parseColor(fabskin))
-                .neutralText(R.string.cancel)
-                .neutralColor(Color.parseColor(fabskin))
-                .callback(new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog materialDialog) {
-                        copyToClipboard(c, f.getPath());
-                        Toast.makeText(c, c.getResources().getString(R.string.pathcopied), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNegative(MaterialDialog materialDialog) {
-                    }
-                })
-                .build();
-        materialDialog.show();
-        new GenerateMD5Task(materialDialog, (f), name, parent, size, items, date, c, v).execute(f.getPath());
     }
 
     public static boolean copyToClipboard(Context context, String text) {

@@ -643,12 +643,6 @@ public class Main extends android.support.v4.app.Fragment {
                         getActivity().finish();
                     }
                     return true;
-                case R.id.about:
-                    Layoutelements x;
-                    x = LIST_ELEMENTS.get((plist.get(0)));
-                    utils.showProps((x).generateBaseFile(), x.getPermissions(), ma, BaseActivity.rootMode, utilsProvider.getAppTheme());
-                    mode.finish();
-                    return true;
                 case R.id.delete:
                     utils.deleteFiles(LIST_ELEMENTS, ma, plist, utilsProvider.getAppTheme());
                     return true;

@@ -686,18 +686,6 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.about:
-                                utilsProvider.getFutils().showProps((rowItem).generateBaseFile(),
-                                        rowItem.getPermissions(), main,
-                                        BaseActivity.rootMode, utilsProvider.getAppTheme());
-                                /*PropertiesSheet propertiesSheet = new PropertiesSheet();
-                                Bundle arguments = new Bundle();
-                                arguments.putParcelable(PropertiesSheet.KEY_FILE, rowItem.generateBaseFile());
-                                arguments.putString(PropertiesSheet.KEY_PERMISSION, rowItem.getPermissions());
-                                arguments.putBoolean(PropertiesSheet.KEY_ROOT, BaseActivity.rootMode);
-                                propertiesSheet.setArguments(arguments);
-                                propertiesSheet.show(main.getFragmentManager(), PropertiesSheet.TAG_FRAGMENT);*/
-                                return true;
                             case R.id.share:
                                 ArrayList<File> arrayList = new ArrayList<>();
                                 arrayList.add(new File(rowItem.getDesc()));

@@ -107,9 +107,7 @@ import com.xiaochen.videoplayer.ui.views.ScrimInsetsRelativeLayout;
 import com.xiaochen.videoplayer.utils.AppConfig;
 import com.xiaochen.videoplayer.utils.BookSorter;
 import com.xiaochen.videoplayer.utils.DataUtils;
-import com.xiaochen.videoplayer.utils.DataUtils.DataChangeListener;
 import com.xiaochen.videoplayer.utils.Futils;
-import com.xiaochen.videoplayer.utils.HistoryManager;
 import com.xiaochen.videoplayer.utils.MainActivityHelper;
 import com.xiaochen.videoplayer.utils.OpenMode;
 import com.xiaochen.videoplayer.utils.PreferenceUtils;
@@ -132,7 +130,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 
 public class MainActivity extends BaseActivity implements OnRequestPermissionsResultCallback,
-        DataChangeListener, SearchAsyncHelper.HelperCallbacks {
+        SearchAsyncHelper.HelperCallbacks {
 
     final Pattern DIR_SEPARATOR = Pattern.compile("/");
     /* Request code used to invoke sign in user interactions. */
@@ -156,7 +154,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     public LinearLayout pathbar;
     public FrameLayout buttonBarFrame;
     public boolean isDrawerLocked = false;
-    HistoryManager grid;
     Futils utils;
 
     MainActivity mainActivity = this;
@@ -238,7 +235,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         super.onCreate(savedInstanceState);
         initialisePreferences();
         initializeInteractiveShell();
-        DataUtils.registerOnDataChangedListener(this);
         setContentView(R.layout.main_toolbar);
         initialiseViews();
         tabHandler = new TabHandler(this);
@@ -247,19 +243,9 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         mainActivityHelper = new MainActivityHelper(this);
         initialiseFab();
 
-        grid = new HistoryManager(this, "listgridmodes");
-        grid.initializeTable(DataUtils.LIST, 0);
-        grid.initializeTable(DataUtils.GRID, 0);
-        grid.initializeTable(DataUtils.BOOKS, 1);
-        grid.initializeTable(DataUtils.DRIVE, 1);
-        grid.initializeTable(DataUtils.SMB, 1);
-
         if (!Sp.getBoolean("booksadded", false)) {
-            grid.make(DataUtils.BOOKS);
             Sp.edit().putBoolean("booksadded", true).commit();
         }
-        DataUtils.setGridfiles(grid.readTable(DataUtils.GRID));
-        DataUtils.setListfiles(grid.readTable(DataUtils.LIST));
         util = new IconUtils(Sp, this);
         icons = new IconUtils(Sp, this);
 
@@ -611,51 +597,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         }
         DataUtils.setStorages(val);
         list.add(new SectionItem());
-        try {
-            for (String[] file : grid.readTableSecondary(DataUtils.SMB))
-                Servers.add(file);
-            DataUtils.setServers(Servers);
-            if (Servers.size() > 0) {
-                Collections.sort(Servers, new BookSorter());
-                for (String[] file : Servers)
-                    list.add(new EntryItem(file[0], file[1], ContextCompat.getDrawable(this, R.drawable
-                            .ic_settings_remote_white_48dp)));
-                list.add(new SectionItem());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        try {
-            for (String[] file : grid.readTableSecondary(DataUtils.DRIVE)) {
-                accounts.add(file);
-            }
-            DataUtils.setAccounts(accounts);
-            if (accounts.size() > 0) {
-                Collections.sort(accounts, new BookSorter());
-                for (String[] file : accounts)
-                    list.add(new EntryItem(file[0], file[1], ContextCompat.getDrawable(this, R.drawable
-                            .drive)));
-                list.add(new SectionItem());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            for (String[] file : grid.readTableSecondary(DataUtils.BOOKS)) {
-                books.add(file);
-            }
-            DataUtils.setBooks(books);
-            if (books.size() > 0) {
-                Collections.sort(books, new BookSorter());
-                for (String[] file : books)
-                    list.add(new EntryItem(file[0], file[1], ContextCompat.getDrawable(this, R.drawable
-                            .folder_fab)));
-                list.add(new SectionItem());
-            }
-        } catch (Exception e) {
-
-        }
         list.add(new EntryItem(getResources().getString(R.string.videos), "1", ContextCompat.getDrawable(this, R.drawable.ic_doc_video_am)));
         DataUtils.setList(list);
         adapter = new DrawerAdapter(this, this, list, MainActivity.this, Sp);
@@ -956,25 +898,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 });
                 a.build().show();
                 break;
-            case R.id.view:
-                if (ma.IS_LIST) {
-                    if (DataUtils.listfiles.contains(ma.CURRENT_PATH)) {
-                        DataUtils.listfiles.remove(ma.CURRENT_PATH);
-                        grid.removePath(ma.CURRENT_PATH, DataUtils.LIST);
-                    }
-                    grid.addPath(null, ma.CURRENT_PATH, DataUtils.GRID, 0);
-                    DataUtils.gridfiles.add(ma.CURRENT_PATH);
-                } else {
-                    if (DataUtils.gridfiles.contains(ma.CURRENT_PATH)) {
-                        DataUtils.gridfiles.remove(ma.CURRENT_PATH);
-                        grid.removePath(ma.CURRENT_PATH, DataUtils.GRID);
-                    }
-                    grid.addPath(null, ma.CURRENT_PATH, DataUtils.LIST, 0);
-                    DataUtils.listfiles.add(ma.CURRENT_PATH);
-
-                }
-                ma.switchView();
-                break;
             case R.id.paste:
                 String path = ma.CURRENT_PATH;
                 ArrayList<BaseFile> arrayList = new ArrayList<>();
@@ -1258,9 +1181,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         DataUtils.clear();
 
         closeInteractiveShell();
-
-        if (grid != null)
-            grid.end();
     }
 
     /**
@@ -2094,13 +2014,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             }
 
         }
-    }
-
-    @Override
-    public void onBookAdded(String[] path, boolean refreshdrawer) {
-        grid.addPath(path[0], path[1], DataUtils.BOOKS, 1);
-        if (refreshdrawer)
-            refreshDrawer();
     }
 
     @Override

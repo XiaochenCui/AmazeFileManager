@@ -36,7 +36,6 @@ import com.xiaochen.videoplayer.ui.Layoutelements;
 import com.xiaochen.videoplayer.ui.icons.Icons;
 import com.xiaochen.videoplayer.utils.DataUtils;
 import com.xiaochen.videoplayer.utils.FileListSorter;
-import com.xiaochen.videoplayer.utils.HistoryManager;
 import com.xiaochen.videoplayer.utils.OpenMode;
 import com.xiaochen.videoplayer.utils.provider.UtilitiesProviderInterface;
 
@@ -127,10 +126,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
                     case 4:
                         arrayList = (listApks());
                         path = "4";
-                        break;
-                    case 5:
-                        arrayList = listRecent();
-                        path = "5";
                         break;
                     case 6:
                         arrayList = listRecentFiles();
@@ -351,22 +346,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return songs;
-    }
-
-    ArrayList<BaseFile> listRecent() {
-        final HistoryManager history = new HistoryManager(c, "Table2");
-        final ArrayList<String> paths = history.readTable(DataUtils.HISTORY);
-        history.end();
-        ArrayList<BaseFile> songs = new ArrayList<>();
-        for (String f : paths) {
-            if (!f.equals("/")) {
-                BaseFile a = RootHelper.generateBaseFile(new File(f), ma.SHOW_HIDDEN);
-                a.generateMode(ma.getActivity());
-                if (a != null && !a.isSmb() && !(a).isDirectory() && a.exists())
-                    songs.add(a);
-            }
-        }
         return songs;
     }
 

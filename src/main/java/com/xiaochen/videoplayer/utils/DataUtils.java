@@ -19,8 +19,6 @@ public class DataUtils {
     public static ArrayList<Item> list = new ArrayList<>();
     public static ArrayList<String[]> servers = new ArrayList<>(), books = new ArrayList<>(), accounts = new ArrayList<>();
 
-    static DataChangeListener dataChangeListener;
-
     public static int containsServer(String[] a) {
         return contains(a, servers);
     }
@@ -55,10 +53,6 @@ public class DataUtils {
         accounts = new ArrayList<>();
     }
 
-    public static void registerOnDataChangedListener(DataChangeListener dataChangeListener) {
-        DataUtils.dataChangeListener = dataChangeListener;
-    }
-
     static int contains(String[] a, ArrayList<String[]> b) {
         if (b == null) return -1;
         int i = 0;
@@ -81,11 +75,6 @@ public class DataUtils {
     }
 
     public static void addBook(String[] i) {
-        books.add(i);
-    }
-
-    public static void addBook(String[] i, boolean refreshdrawer) {
-        if (refreshdrawer && dataChangeListener != null) dataChangeListener.onBookAdded(i, true);
         books.add(i);
     }
 
@@ -168,10 +157,5 @@ public class DataUtils {
 
     public static void setList(ArrayList<Item> list) {
         DataUtils.list = list;
-    }
-
-    //Callbacks to do original changes in database (and ui if required)
-    public interface DataChangeListener {
-        void onBookAdded(String path[], boolean refreshdrawer);
     }
 }

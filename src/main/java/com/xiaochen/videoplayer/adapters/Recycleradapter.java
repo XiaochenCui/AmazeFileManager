@@ -725,11 +725,6 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
                             case R.id.ex:
                                 main.MAIN_ACTIVITY.mainActivityHelper.extractFile(new File(rowItem.getDesc()));
                                 return true;
-                            case R.id.book:
-                                DataUtils.addBook(new String[]{rowItem.getTitle(), rowItem.getDesc()}, true);
-                                main.MAIN_ACTIVITY.updateDrawer();
-                                Toast.makeText(main.getActivity(), main.getResources().getString(R.string.bookmarksadded), Toast.LENGTH_LONG).show();
-                                return true;
                             case R.id.delete:
                                 ArrayList<Integer> positions = new ArrayList<>();
                                 positions.add(position);

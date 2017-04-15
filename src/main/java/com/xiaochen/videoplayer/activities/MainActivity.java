@@ -270,11 +270,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                     mainActivityHelper.showFailedOperationDialog(failedOps, intent.getBooleanExtra("move", false), this);
                 }
             }
-            if (intent.getAction() != null) {
-                // file picker intent
-                mReturnIntent = true;
-                Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-            }
         } catch (Exception e) {
 
         }

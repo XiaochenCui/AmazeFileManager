@@ -240,11 +240,9 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
             txtDesc = (TextView) view.findViewById(R.id.secondLine);
             apkIcon = (ImageView) view.findViewById(R.id.apk_icon);
             genericText = (TextView) view.findViewById(R.id.generictext);
-            imageView1 = (ImageView) view.findViewById(R.id.icon_thumb);
             about = (ImageButton) view.findViewById(R.id.properties);
             checkImageView = (ImageView) view.findViewById(R.id.check_icon);
             genericIcon = (ImageView) view.findViewById(R.id.generic_icon);
-            checkImageViewGrid = (ImageView) view.findViewById(R.id.check_icon_grid);
         }
     }
 
@@ -606,7 +604,6 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
                     holder.rl.setBackgroundResource(R.drawable.item_doc_grid);
                 else {
                     holder.rl.setBackgroundResource(R.drawable.ic_grid_card_background_dark);
-                    holder.rl.findViewById(R.id.icon_frame).setBackgroundColor(Color.parseColor("#303030"));
                 }
             }
 

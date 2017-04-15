@@ -98,8 +98,6 @@ import com.xiaochen.videoplayer.services.CopyService;
 import com.xiaochen.videoplayer.services.DeleteTask;
 import com.xiaochen.videoplayer.services.asynctasks.CopyFileCheck;
 import com.xiaochen.videoplayer.services.asynctasks.MoveFiles;
-import com.xiaochen.videoplayer.ui.dialogs.RenameBookmark;
-import com.xiaochen.videoplayer.ui.dialogs.RenameBookmark.BookmarkCallback;
 import com.xiaochen.videoplayer.ui.drawer.EntryItem;
 import com.xiaochen.videoplayer.ui.drawer.Item;
 import com.xiaochen.videoplayer.ui.drawer.SectionItem;
@@ -134,8 +132,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 
 public class MainActivity extends BaseActivity implements OnRequestPermissionsResultCallback,
-        DataChangeListener, BookmarkCallback,
-        SearchAsyncHelper.HelperCallbacks {
+        DataChangeListener, SearchAsyncHelper.HelperCallbacks {
 
     final Pattern DIR_SEPARATOR = Pattern.compile("/");
     /* Request code used to invoke sign in user interactions. */
@@ -1927,15 +1924,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         }
     }
 
-    public void renameBookmark(final String title, final String path) {
-        if (DataUtils.containsBooks(new String[]{title, path}) != -1 || DataUtils.containsAccounts(new String[]{title, path}) != -1) {
-            RenameBookmark renameBookmark = RenameBookmark.getInstance(title, path, BaseActivity.accentSkin);
-            if (renameBookmark != null) {
-                renameBookmark.show(getFragmentManager(), "renamedialog");
-            }
-        }
-    }
-
     void onDrawerClosed() {
         if (pending_fragmentTransaction != null) {
             pending_fragmentTransaction.commit();
@@ -2113,19 +2101,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         grid.addPath(path[0], path[1], DataUtils.BOOKS, 1);
         if (refreshdrawer)
             refreshDrawer();
-    }
-
-    @Override
-    public void delete(String title, String path) {
-        grid.removePath(title, path, DataUtils.BOOKS);
-        refreshDrawer();
-
-    }
-
-    @Override
-    public void modify(String oldpath, String oldname, String newPath, String newname) {
-        grid.rename(oldname, oldpath, newPath, newname, DataUtils.BOOKS);
-        refreshDrawer();
     }
 
     @Override

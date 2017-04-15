@@ -145,9 +145,6 @@ public class DrawerAdapter extends ArrayAdapter<Item> {
                     if (position > m.storage_count && position < values.size()-7) {
                         EntryItem item=(EntryItem) getItem(position);
                         String path = (item).getPath();
-                        if(DataUtils.containsBooks(new String[]{item.getTitle(),path})!=-1){
-                            m.renameBookmark((item).getTitle(),path);
-                        }
                     } else if(position<m.storage_count ){
                         String path = ((EntryItem) getItem(position)).getPath();
                         if(!path.equals("/"))

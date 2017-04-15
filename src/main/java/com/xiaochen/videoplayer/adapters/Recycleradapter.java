@@ -255,10 +255,8 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
             return new ViewHolder(v);
         }
         View v;
-        if (main.IS_LIST) v = mInflater.inflate(R.layout.rowlayout, parent, false);
-        else v = mInflater.inflate(R.layout.griditem, parent, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        v = mInflater.inflate(R.layout.rowlayout, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override

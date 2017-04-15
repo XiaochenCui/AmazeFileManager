@@ -90,4 +90,5 @@
 
     <color name="white_translucent">#80ffffff</color>
 
+    <color name="percent_50_black">#80000000</color>
 </resources>

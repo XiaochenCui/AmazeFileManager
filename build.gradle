@@ -101,10 +101,6 @@ dependencies {
     compile 'com.github.clans:fab:1.6.1'
     compile 'com.afollestad.material-dialogs:core:0.9.2.3'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-    //FTP Server
-//        compile 'org.apache.mina:mina-core:2.0.13'
-    //    compile 'org.apache.ftpserver:ftpserver-core:1.0.6'
-    //    compile 'org.apache.ftpserver:ftplet-api:1.0.6'
 
     // https://mvnrepository.com/artifact/org.apache.mina/mina-core
     compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.13'
@@ -126,6 +122,11 @@ dependencies {
     //compile 'com.jcraft:jsch:0.1.53'
     compile 'com.android.volley:volley:1.0.0'
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.github.danylovolokh:video-player-manager:0.2.0'
+    compile 'com.github.danylovolokh:list-visibility-utils:0.2.0'
 }
 
 def Properties props = new Properties()

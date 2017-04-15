@@ -106,32 +106,7 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         switch (openmode) {
             case CUSTOM:
                 ArrayList<BaseFile> arrayList = null;
-                switch (Integer.parseInt(path)) {
-                    case 0:
-                        arrayList = (listImages());
-                        path = "0";
-                        break;
-                    case 1:
-                        arrayList = (listVideos());
-                        path = "1";
-                        break;
-                    case 2:
-                        arrayList = (listaudio());
-                        path = "2";
-                        break;
-                    case 3:
-                        arrayList = (listDocs());
-                        path = "3";
-                        break;
-                    case 4:
-                        arrayList = (listApks());
-                        path = "4";
-                        break;
-                    case 6:
-                        arrayList = listRecentFiles();
-                        path = "6";
-                        break;
-                }
+                arrayList = (listVideos());
                 try {
                     if (arrayList != null)
                         list = addTo(arrayList);
@@ -223,51 +198,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         ma.mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    ArrayList<BaseFile> listaudio() {
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-        String[] projection = {
-                MediaStore.Audio.Media.DATA
-        };
-
-        Cursor cursor = c.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                selection,
-                null,
-                null);
-
-        ArrayList<BaseFile> songs = new ArrayList<>();
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex
-                        (MediaStore.Files.FileColumns.DATA));
-                BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
-                if (strings != null) songs.add(strings);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return songs;
-    }
-
-    ArrayList<BaseFile> listImages() {
-        ArrayList<BaseFile> songs = new ArrayList<>();
-        final String[] projection = {MediaStore.Images.Media.DATA};
-        final Cursor cursor = c.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                null,
-                null,
-                null);
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex
-                        (MediaStore.Files.FileColumns.DATA));
-                BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
-                if (strings != null) songs.add(strings);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return songs;
-    }
 
     ArrayList<BaseFile> listVideos() {
         ArrayList<BaseFile> songs = new ArrayList<>();
@@ -284,89 +214,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
                         (MediaStore.Files.FileColumns.DATA));
                 BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
                 if (strings != null) songs.add(strings);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return songs;
-    }
-
-    ArrayList<BaseFile> listRecentFiles() {
-        ArrayList<BaseFile> songs = new ArrayList<BaseFile>();
-        final String[] projection = {MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DATE_MODIFIED};
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) - 2);
-        Date d = c.getTime();
-        Cursor cursor = this.c.getContentResolver().query(MediaStore.Files
-                        .getContentUri("external"), projection,
-                null,
-                null, null);
-        if (cursor == null) return songs;
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex
-                        (MediaStore.Files.FileColumns.DATA));
-                File f = new File(path);
-                if (d.compareTo(new Date(f.lastModified())) != 1 && !f.isDirectory()) {
-                    BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
-                    if (strings != null) songs.add(strings);
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        Collections.sort(songs, new Comparator<BaseFile>() {
-            @Override
-            public int compare(BaseFile lhs, BaseFile rhs) {
-                return -1 * Long.valueOf(lhs.getDate()).compareTo(Long.valueOf(rhs.getDate()));
-
-            }
-        });
-        if (songs.size() > 20)
-            for (int i = songs.size() - 1; i > 20; i--) {
-                songs.remove(i);
-            }
-        return songs;
-    }
-
-    ArrayList<BaseFile> listApks() {
-        ArrayList<BaseFile> songs = new ArrayList<BaseFile>();
-        final String[] projection = {MediaStore.Files.FileColumns.DATA};
-
-        Cursor cursor = c.getContentResolver().query(MediaStore.Files
-                        .getContentUri("external"), projection,
-                null,
-                null, null);
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex
-                        (MediaStore.Files.FileColumns.DATA));
-                if (path != null && path.endsWith(".apk")) {
-                    BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
-                    if (strings != null) songs.add(strings);
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return songs;
-    }
-
-    ArrayList<BaseFile> listDocs() {
-        ArrayList<BaseFile> songs = new ArrayList<>();
-        final String[] projection = {MediaStore.Files.FileColumns.DATA};
-        Cursor cursor = c.getContentResolver().query(MediaStore.Files
-                        .getContentUri("external"), projection,
-                null,
-                null, null);
-        String[] types = new String[]{".pdf", ".xml", ".html", ".asm", ".text/x-asm", ".def", ".in", ".rc",
-                ".list", ".log", ".pl", ".prop", ".properties", ".rc",
-                ".doc", ".docx", ".msg", ".odt", ".pages", ".rtf", ".txt", ".wpd", ".wps"};
-        if (cursor.getCount() > 0 && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex
-                        (MediaStore.Files.FileColumns.DATA));
-                if (path != null && contains(types, path)) {
-                    BaseFile strings = RootHelper.generateBaseFile(new File(path), ma.SHOW_HIDDEN);
-                    if (strings != null) songs.add(strings);
-                }
             } while (cursor.moveToNext());
         }
         cursor.close();

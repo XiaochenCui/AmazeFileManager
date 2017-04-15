@@ -29,8 +29,6 @@ import com.xiaochen.videoplayer.fragments.Main;
 import com.xiaochen.videoplayer.fragments.SearchAsyncHelper;
 import com.xiaochen.videoplayer.fragments.TabFragment;
 import com.xiaochen.videoplayer.services.DeleteTask;
-import com.xiaochen.videoplayer.services.ExtractService;
-import com.xiaochen.videoplayer.services.ZipTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -300,26 +298,6 @@ public class MainActivityHelper {
         }
     }
 
-    /**
-     * Helper method to start Compress service
-     * @param file the new compressed file
-     * @param b list of {@link BaseFile} to be compressed
-     */
-    public void compressFiles(File file, ArrayList<BaseFile> baseFiles) {
-        int mode = checkFolder(file.getParentFile(), mainActivity);
-        if (mode == 2) {
-            mainActivity.oppathe = (file.getPath());
-            mainActivity.operation = DataUtils.COMPRESS;
-            mainActivity.oparrayList = baseFiles;
-        } else if (mode == 1) {
-            Intent intent2 = new Intent(mainActivity, ZipTask.class);
-            intent2.putExtra(ZipTask.KEY_COMPRESS_PATH, file.getPath());
-            intent2.putExtra(ZipTask.KEY_COMPRESS_FILES, baseFiles);
-            ServiceWatcherUtil.runService(mainActivity, intent2);
-        } else Toast.makeText(mainActivity, R.string.not_allowed, Toast.LENGTH_SHORT).show();
-    }
-
-
     public void mkFile(final HFile path,final Main ma) {
         final Toast toast=Toast.makeText(ma.getActivity(), ma.getString(R.string.creatingfile),
                 Toast.LENGTH_SHORT);
@@ -475,24 +453,6 @@ public class MainActivityHelper {
         } else if (mode == 1 || mode == 0)
             new DeleteTask(null, mainActivity).execute((files));
         else Toast.makeText(mainActivity, R.string.not_allowed, Toast.LENGTH_SHORT).show();
-    }
-
-    public void extractFile(File file) {
-        int mode = checkFolder(file.getParentFile(), mainActivity);
-        if (mode == 2) {
-            mainActivity.oppathe = (file.getPath());
-            mainActivity.operation = DataUtils.EXTRACT;
-        } else if (mode == 1) {
-            Intent intent = new Intent(mainActivity, ExtractService.class);
-            intent.putExtra(ExtractService.KEY_PATH_ZIP, file.getPath());
-            ServiceWatcherUtil.runService(mainActivity, intent);
-        } else Toast.makeText(mainActivity, R.string.not_allowed, Toast.LENGTH_SHORT).show();
-    }
-
-    public String parseSmbPath(String a) {
-        if (a.contains("@"))
-            return "smb://" + a.substring(a.indexOf("@") + 1, a.length());
-        else return a;
     }
 
     /**

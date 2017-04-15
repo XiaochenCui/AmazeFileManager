@@ -986,36 +986,6 @@ public class Futils {
         return b;
     }
 
-    public void showCompressDialog(final MainActivity m, final ArrayList<BaseFile> b, final String current) {
-        MaterialDialog.Builder a = new MaterialDialog.Builder(m);
-        a.input(m.getResources().getString(R.string.enterzipname), ".zip", false, new
-                MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog materialDialog, CharSequence charSequence) {
-
-                    }
-                });
-        a.widgetColor(Color.parseColor(BaseActivity.accentSkin));
-        a.theme(m.getAppTheme().getMaterialDialogTheme());
-        a.title(m.getResources().getString(R.string.enterzipname));
-        a.positiveText(R.string.create);
-        a.positiveColor(Color.parseColor(BaseActivity.accentSkin));
-        a.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                if (materialDialog.getInputEditText().getText().toString().equals(".zip"))
-                    Toast.makeText(m, "File should have a name", Toast.LENGTH_SHORT).show();
-                else {
-                    String name = current + "/" + materialDialog.getInputEditText().getText().toString();
-                    m.mainActivityHelper.compressFiles(new File(name), b);
-                }
-            }
-        });
-        a.negativeText(m.getResources().getString(R.string.cancel));
-        a.negativeColor(Color.parseColor(BaseActivity.accentSkin));
-        a.build().show();
-    }
-
     public void showSortDialog(final Main m, AppTheme appTheme) {
         String[] sort = m.getResources().getStringArray(R.array.sortby);
         int current = Integer.parseInt(m.Sp.getString("sortby", "0"));

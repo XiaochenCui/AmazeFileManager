@@ -163,7 +163,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     IconUtils util;
     Context con = this;
     public MainActivityHelper mainActivityHelper;
-    String zippath;
     FragmentTransaction pending_fragmentTransaction;
     String pending_path;
     boolean openprocesses = false;
@@ -272,24 +271,9 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 }
             }
             if (intent.getAction() != null) {
-
-                if (intent.getAction().equals(Intent.ACTION_GET_CONTENT)) {
-
-                    // file picker intent
-                    mReturnIntent = true;
-                    Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-                } else if (intent.getAction().equals(RingtoneManager.ACTION_RINGTONE_PICKER)) {
-                    // ringtone picker intent
-                    mReturnIntent = true;
-                    mRingtonePickerIntent = true;
-                    Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-                } else if (intent.getAction().equals(Intent.ACTION_VIEW)) {
-
-                    // zip viewer intent
-                    Uri uri = intent.getData();
-                    openzip = true;
-                    zippath = uri.toString();
-                }
+                // file picker intent
+                mReturnIntent = true;
+                Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
 
@@ -1330,11 +1314,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                     mainActivityHelper.mkFile(new HFile(OpenMode.FILE, oppathe), ma3);
 
                     break;
-                case DataUtils.EXTRACT:
-                    mainActivityHelper.extractFile(new File(oppathe));
-                    break;
-                case DataUtils.COMPRESS:
-                    mainActivityHelper.compressFiles(new File(oppathe), oparrayList);
             }
             operation = -1;
         } else if (requestCode == REQUEST_CODE_SAF && responseCode == Activity.RESULT_OK) {

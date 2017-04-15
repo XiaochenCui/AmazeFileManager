@@ -722,9 +722,6 @@ public class Recycleradapter extends RecyclerArrayAdapter<String, RecyclerView.V
                                 MAIN_ACTIVITY1.MOVE_PATH = copie;
                                 MAIN_ACTIVITY1.supportInvalidateOptionsMenu();
                                 return true;
-                            case R.id.ex:
-                                main.MAIN_ACTIVITY.mainActivityHelper.extractFile(new File(rowItem.getDesc()));
-                                return true;
                             case R.id.delete:
                                 ArrayList<Integer> positions = new ArrayList<>();
                                 positions.add(position);

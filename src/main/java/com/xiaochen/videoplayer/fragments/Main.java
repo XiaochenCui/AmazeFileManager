@@ -647,44 +647,8 @@ public class Main extends android.support.v4.app.Fragment {
                     Layoutelements x;
                     x = LIST_ELEMENTS.get((plist.get(0)));
                     utils.showProps((x).generateBaseFile(), x.getPermissions(), ma, BaseActivity.rootMode, utilsProvider.getAppTheme());
-                    /*PropertiesSheet propertiesSheet = new PropertiesSheet();
-                    Bundle arguments = new Bundle();
-                    arguments.putParcelable(PropertiesSheet.KEY_FILE, x.generateBaseFile());
-                    arguments.putString(PropertiesSheet.KEY_PERMISSION, x.getPermissions());
-                    arguments.putBoolean(PropertiesSheet.KEY_ROOT, BaseActivity.rootMode);
-                    propertiesSheet.setArguments(arguments);
-                    propertiesSheet.show(getFragmentManager(), PropertiesSheet.TAG_FRAGMENT);*/
                     mode.finish();
                     return true;
-                /*case R.id.setringtone:
-                    File fx;
-                    if(results)
-                        fx=new File(slist.get((plist.get(0))).getDesc());
-                        else
-                        fx=new File(list.get((plist.get(0))).getDesc());
-
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.MediaColumns.DATA, fx.getAbsolutePath());
-                    values.put(MediaStore.MediaColumns.TITLE, "Amaze");
-                    values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/mp3");
-                    //values.put(MediaStore.MediaColumns.SIZE, fx.);
-                    values.put(MediaStore.Audio.Media.ARTIST, R.string.app_name);
-                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, false);
-                    values.put(MediaStore.Audio.Media.IS_ALARM, false);
-                    values.put(MediaStore.Audio.Media.IS_MUSIC, false);
-
-                    Uri uri = MediaStore.Audio.Media.getContentUriForPath(fx.getAbsolutePath());
-                    Uri newUri = getActivity().getContentResolver().insert(uri, values);
-                    try {
-                        RingtoneManager.setActualDefaultRingtoneUri(getActivity(), RingtoneManager.TYPE_RINGTONE, newUri);
-                        //Settings.System.putString(getActivity().getContentResolver(), Settings.System.RINGTONE, newUri.toString());
-                        Toast.makeText(getActivity(), "Successful" + fx.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                    } catch (Throwable t) {
-
-                        Log.d("ringtone", "failed");
-                    }
-                    return true;*/
                 case R.id.delete:
                     utils.deleteFiles(LIST_ELEMENTS, ma, plist, utilsProvider.getAppTheme());
                     return true;
@@ -720,17 +684,6 @@ public class Main extends android.support.v4.app.Fragment {
                     rename(f);
                     mode.finish();
                     return true;
-                case R.id.hide:
-                    for (int i1 = 0; i1 < plist.size(); i1++) {
-                        hide(LIST_ELEMENTS.get(plist.get(i1)).getDesc());
-                    }
-                    updateList();
-                    mode.finish();
-                    return true;
-                case R.id.ex:
-                    MAIN_ACTIVITY.mainActivityHelper.extractFile(new File(LIST_ELEMENTS.get(plist.get(0)).getDesc()));
-                    mode.finish();
-                    return true;
                 case R.id.cpy:
                     MAIN_ACTIVITY.MOVE_PATH = null;
                     ArrayList<BaseFile> copies = new ArrayList<>();
@@ -749,14 +702,6 @@ public class Main extends android.support.v4.app.Fragment {
                     }
                     MAIN_ACTIVITY.MOVE_PATH = copie;
                     MAIN_ACTIVITY.supportInvalidateOptionsMenu();
-                    mode.finish();
-                    return true;
-                case R.id.compress:
-                    ArrayList<BaseFile> copies1 = new ArrayList<>();
-                    for (int i4 = 0; i4 < plist.size(); i4++) {
-                        copies1.add(LIST_ELEMENTS.get(plist.get(i4)).generateBaseFile());
-                    }
-                    utils.showCompressDialog((MainActivity) getActivity(), copies1, CURRENT_PATH);
                     mode.finish();
                     return true;
                 case R.id.openwith:

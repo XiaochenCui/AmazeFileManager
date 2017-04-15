@@ -45,8 +45,6 @@ import android.widget.Toast;
 import com.xiaochen.videoplayer.R;
 import com.xiaochen.videoplayer.activities.MainActivity;
 import com.xiaochen.videoplayer.services.CopyService;
-import com.xiaochen.videoplayer.services.ExtractService;
-import com.xiaochen.videoplayer.services.ZipTask;
 import com.xiaochen.videoplayer.ui.icons.IconUtils;
 import com.xiaochen.videoplayer.utils.DataPackage;
 import com.xiaochen.videoplayer.utils.Futils;
@@ -170,114 +168,18 @@ public class ProcessViewer extends Fragment {
         }
     };
 
-    private ServiceConnection mExtractConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            ExtractService.LocalBinder localBinder = (ExtractService.LocalBinder) service;
-            ExtractService extractService = localBinder.getService();
-
-            for (int i=0; i<extractService.getDataPackageSize(); i++) {
-
-                processResults(extractService.getDataPackage(i), ServiceType.EXTRACT);
-            }
-
-            // animate the chart a little after initial values have been applied
-            mLineChart.animateXY(500, 500);
-
-            extractService.setProgressListener(new ExtractService.ProgressListener() {
-                @Override
-                public void onUpdate(final DataPackage dataPackage) {
-                    if (getActivity()==null) {
-                        // callback called when we're not inside the app
-                        return;
-                    }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            processResults(dataPackage, ServiceType.EXTRACT);
-                        }
-                    });
-                }
-
-                @Override
-                public void refresh() {
-
-                }
-            });
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
-
-    private ServiceConnection mCompressConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            ZipTask.LocalBinder localBinder = (ZipTask.LocalBinder) service;
-            ZipTask zipTask = localBinder.getService();
-
-            for (int i=0; i<zipTask.getDataPackageSize(); i++) {
-
-                processResults(zipTask.getDataPackage(i), ServiceType.COMPRESS);
-            }
-
-            // animate the chart a little after initial values have been applied
-            mLineChart.animateXY(500, 500);
-
-            zipTask.setProgressListener(new ZipTask.ProgressListener() {
-                @Override
-                public void onUpdate(final DataPackage dataPackage) {
-                    if (getActivity() == null) {
-                        // callback called when we're not inside the app
-                        return;
-                    }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            processResults(dataPackage, ServiceType.COMPRESS);
-                        }
-                    });
-                }
-
-                @Override
-                public void refresh() {
-
-                }
-            });
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-        }
-    };
-
     @Override
     public void onResume() {
         super.onResume();
 
         Intent intent = new Intent(getActivity(), CopyService.class);
         getActivity().bindService(intent, mConnection, 0);
-        Intent intent1 = new Intent(getActivity(), ExtractService.class);
-        getActivity().bindService(intent1, mExtractConnection, 0);
-        Intent intent2 = new Intent(getActivity(), ZipTask.class);
-        getActivity().bindService(intent2, mCompressConnection, 0);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().unbindService(mConnection);
-        getActivity().unbindService(mExtractConnection);
-        getActivity().unbindService(mCompressConnection);
     }
 
     @Override
@@ -375,30 +277,6 @@ public class ProcessViewer extends Fragment {
                 mProgressTypeText.setText(isMove ? getResources().getString(R.string.moving)
                         : getResources().getString(R.string.copying));
                 cancelBroadcast(new Intent(CopyService.TAG_BROADCAST_COPY_CANCEL));
-                break;
-            case EXTRACT:
-                if (mainActivity.getAppTheme().equals(AppTheme.DARK)) {
-
-                    mProgressImage.setImageDrawable(getResources()
-                            .getDrawable(R.drawable.ic_zip_box_white_36dp));
-                } else {
-                    mProgressImage.setImageDrawable(getResources()
-                            .getDrawable(R.drawable.ic_zip_box_grey600_36dp));
-                }
-                mProgressTypeText.setText(getResources().getString(R.string.extracting));
-                cancelBroadcast(new Intent(ExtractService.TAG_BROADCAST_EXTRACT_CANCEL));
-                break;
-            case COMPRESS:
-                if (mainActivity.getAppTheme().equals(AppTheme.DARK)) {
-
-                    mProgressImage.setImageDrawable(getResources()
-                            .getDrawable(R.drawable.ic_zip_box_white_36dp));
-                } else {
-                    mProgressImage.setImageDrawable(getResources()
-                            .getDrawable(R.drawable.ic_zip_box_grey600_36dp));
-                }
-                mProgressTypeText.setText(getResources().getString(R.string.compressing));
-                cancelBroadcast(new Intent(ZipTask.KEY_COMPRESS_BROADCAST_CANCEL));
                 break;
         }
     }

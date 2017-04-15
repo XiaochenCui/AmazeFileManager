@@ -53,8 +53,6 @@ public class TabFragment extends android.support.v4.app.Fragment
     SharedPreferences Sp;
     String path;
 
-    // current visible tab, either 0 or 1
-    //public int currenttab;
     MainActivity mainActivity;
     View buttons;
     View mToolBarContainer;

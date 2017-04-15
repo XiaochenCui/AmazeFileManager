@@ -1802,25 +1802,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             //Commit the transaction
             transaction.commitAllowingStateLoss();
             supportInvalidateOptionsMenu();
-        } else if (intent.getAction() != null) {
-            // file picker intent
-            mReturnIntent = true;
-            Toast.makeText(this, getString(R.string.pick_a_file), Toast.LENGTH_LONG).show();
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-                if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-                    if (Sp.getString(KEY_PREF_OTG, null) == null) {
-                        Sp.edit().putString(KEY_PREF_OTG, VALUE_PREF_OTG_NULL).apply();
-                        updateDrawer();
-                    }
-
-                } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
-                    Sp.edit().putString(KEY_PREF_OTG, null).apply();
-                    updateDrawer();
-                }
-            }
         }
     }
 

@@ -41,10 +41,7 @@ import com.xiaochen.videoplayer.utils.provider.UtilitiesProviderInterface;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 
 public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements>> {

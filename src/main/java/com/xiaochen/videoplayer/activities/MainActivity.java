@@ -57,6 +57,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -108,6 +109,7 @@ import com.xiaochen.videoplayer.utils.AppConfig;
 import com.xiaochen.videoplayer.utils.BookSorter;
 import com.xiaochen.videoplayer.utils.DataUtils;
 import com.xiaochen.videoplayer.utils.Futils;
+import com.xiaochen.videoplayer.utils.Logger;
 import com.xiaochen.videoplayer.utils.MainActivityHelper;
 import com.xiaochen.videoplayer.utils.OpenMode;
 import com.xiaochen.videoplayer.utils.PreferenceUtils;
@@ -637,6 +639,8 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     }
 
     public void selectItem(final int i) {
+        Logger.log(null, "[custom log] selectItem invoked with: " + i, null);
+        Log.v(null, "[android log] selectItem invoked with: " + i);
         ArrayList<Item> list = DataUtils.getList();
         if (!list.get(i).isSection())
             if ((select == null || select >= list.size())) {
@@ -689,27 +693,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.activity_extra, menu);
-        /*SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
-
-        MenuItem search = menu.findItem(R.id.search);
-        MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                *//* Stretching the SearchView across width of the Toolbar *//*
-                toolbar.setContentInsetsRelative(0, 0);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                *//* Restoring *//*
-                toolbar.setContentInsetsRelative(TOOLBAR_START_INSET, 0);
-                return true;
-            }
-        });*/
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -1048,9 +1048,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         super.onPause();
         unregisterReceiver(mainActivityHelper.mNotificationReceiver);
         unregisterReceiver(receiver2);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            unregisterReceiver(mOtgReceiver);
-        }
         killToast();
     }
 
@@ -1078,48 +1075,11 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             floatingActionButton.setVisibility(View.INVISIBLE);
             floatingActionButton.hideMenuButton(false);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            // Registering intent filter for OTG
-            IntentFilter otgFilter = new IntentFilter();
-            otgFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-            otgFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-            registerReceiver(mOtgReceiver, otgFilter);
-        }
     }
-
-
-    /**
-     * Receiver to check if a USB device is connected at the runtime of application
-     * If device is not connected at runtime (i.e. it was connected when the app was closed)
-     * then {@link #isUsbDeviceConnected()} method handles the connection through
-     * {@link #getStorageDirectories()}
-     */
-    BroadcastReceiver mOtgReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-
-                Sp.edit().putString(KEY_PREF_OTG, VALUE_PREF_OTG_NULL).apply();
-                updateDrawer();
-
-            } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
-                Sp.edit().putString(KEY_PREF_OTG, null).apply();
-                updateDrawer();
-                goToMain("");
-            }
-        }
-    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            /*ImageView ib = (ImageView) findViewById(R.id.action_overflow);
-            if (ib.getVisibility() == View.VISIBLE) {
-                ib.performClick();
-            }*/
             // perform your desired action here
 
             // return 'true' to prevent further propagation of the key event
@@ -1231,13 +1191,6 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             }
             list.add(new SectionItem());
         }
-        list.add(new EntryItem(getResources().getString(R.string.quick), "5", ContextCompat.getDrawable(this, R.drawable.ic_star_white_18dp)));
-        list.add(new EntryItem(getResources().getString(R.string.recent), "6", ContextCompat.getDrawable(this, R.drawable.ic_history_white_48dp)));
-        list.add(new EntryItem(getResources().getString(R.string.images), "0", ContextCompat.getDrawable(this, R.drawable.ic_doc_image)));
-        list.add(new EntryItem(getResources().getString(R.string.videos), "1", ContextCompat.getDrawable(this, R.drawable.ic_doc_video_am)));
-        list.add(new EntryItem(getResources().getString(R.string.audio), "2", ContextCompat.getDrawable(this, R.drawable.ic_doc_audio_am)));
-        list.add(new EntryItem(getResources().getString(R.string.documents), "3", ContextCompat.getDrawable(this, R.drawable.ic_doc_doc_am)));
-        list.add(new EntryItem(getResources().getString(R.string.apks), "4", ContextCompat.getDrawable(this, R.drawable.ic_doc_apk_grid)));
         DataUtils.setList(list);
         adapter = new DrawerAdapter(this, this, list, MainActivity.this, Sp);
         mDrawerList.setAdapter(adapter);

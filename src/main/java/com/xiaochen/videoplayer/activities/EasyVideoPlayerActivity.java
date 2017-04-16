@@ -1,6 +1,7 @@
 package com.xiaochen.videoplayer.activities;
 
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -9,7 +10,7 @@ import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.xiaochen.videoplayer.R;
 
-public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVideoCallback {
+public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVideoCallback{
 
     private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
 

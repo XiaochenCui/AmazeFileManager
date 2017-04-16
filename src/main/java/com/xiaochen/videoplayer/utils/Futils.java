@@ -50,6 +50,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.provider.DocumentFile;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.xiaochen.videoplayer.R;
 import com.xiaochen.videoplayer.activities.BaseActivity;
+import com.xiaochen.videoplayer.activities.EasyVideoPlayerActivity;
 import com.xiaochen.videoplayer.activities.MainActivity;
 import com.xiaochen.videoplayer.exceptions.RootNotPermittedException;
 import com.xiaochen.videoplayer.filesystem.BaseFile;
@@ -507,51 +509,60 @@ public class Futils {
         return null;
     }
 
-    public void openWith(final File f, final Context c) {
-        MaterialDialog.Builder a = new MaterialDialog.Builder(c);
-        a.title(c.getResources().getString(R.string.openas));
-        String[] items = new String[]{c.getResources().getString(R.string.text), c.getResources().getString(R.string.image), c.getResources().getString(R.string.video), c.getResources().getString(R.string.audio), c.getResources().getString(R.string.database), c.getResources().getString(R.string.other)};
 
-        a.items(items).itemsCallback(new MaterialDialog.ListCallback() {
-            @Override
-            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
-                Uri uri = fileToContentUri(c, f);
-                if (uri == null) uri = Uri.fromFile(f);
-                Intent intent = new Intent();
-                intent.setAction(android.content.Intent.ACTION_VIEW);
-                switch (i) {
-                    case 0:
-                        intent.setDataAndType(uri, "text/*");
-                        break;
-                    case 1:
-                        intent.setDataAndType(uri, "image/*");
-                        break;
-                    case 2:
-                        intent.setDataAndType(uri, "video/*");
-                        break;
-                    case 3:
-                        intent.setDataAndType(uri, "audio/*");
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        intent.setDataAndType(uri, "*/*");
-                        break;
-                }
-                try {
-                    c.startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(c, R.string.noappfound, Toast.LENGTH_SHORT).show();
-                    openWith(f, c);
-                }
-            }
-        });
-        try {
-            a.build().show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void openWith(final File f, final Context c) {
+        Intent in = new Intent(c, EasyVideoPlayerActivity.class);
+        c.startActivity(in);
     }
+//
+//    public void openWith(final File f, final Context c) {
+//        Log.v("openWith", "File: " + f);
+//        Log.v("openWith", "Context: " + c);
+//        MaterialDialog.Builder a = new MaterialDialog.Builder(c);
+//        a.title(c.getResources().getString(R.string.openas));
+//        String[] items = new String[]{c.getResources().getString(R.string.text), c.getResources().getString(R.string.image), c.getResources().getString(R.string.video), c.getResources().getString(R.string.audio), c.getResources().getString(R.string.database), c.getResources().getString(R.string.other)};
+//
+//        a.items(items).itemsCallback(new MaterialDialog.ListCallback() {
+//            @Override
+//            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+//                Uri uri = fileToContentUri(c, f);
+//                Log.v("openWith", "url: " + uri);
+//                if (uri == null) uri = Uri.fromFile(f);
+//                Intent intent = new Intent();
+//                intent.setAction(android.content.Intent.ACTION_VIEW);
+//                switch (i) {
+//                    case 0:
+//                        intent.setDataAndType(uri, "text/*");
+//                        break;
+//                    case 1:
+//                        intent.setDataAndType(uri, "image/*");
+//                        break;
+//                    case 2:
+//                        intent.setDataAndType(uri, "video/*");
+//                        break;
+//                    case 3:
+//                        intent.setDataAndType(uri, "audio/*");
+//                        break;
+//                    case 4:
+//                        break;
+//                    case 5:
+//                        intent.setDataAndType(uri, "*/*");
+//                        break;
+//                }
+//                try {
+//                    c.startActivity(intent);
+//                } catch (Exception e) {
+//                    Toast.makeText(c, R.string.noappfound, Toast.LENGTH_SHORT).show();
+//                    openWith(f, c);
+//                }
+//            }
+//        });
+//        try {
+//            a.build().show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void openWith(final DocumentFile f, final Context c) {
         MaterialDialog.Builder a = new MaterialDialog.Builder(c);

@@ -695,7 +695,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
             return true;
         }
         if (f.contains("TabFragment")) {
-            setActionBarTitle("Amaze");
+            setActionBarTitle("XiaochenCui");
             if (aBoolean) {
                 s.setTitle(getResources().getString(R.string.gridview));
             } else {
@@ -1469,7 +1469,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //mDrawerLayout.setStatusBarBackgroundColor(Color.parseColor((currentTab==1 ? skinTwo : skin)));
         mDrawerList = (ListView) findViewById(R.id.menu_drawer);
-        drawerHeaderView.setBackgroundResource(R.drawable.amaze_header);
+        drawerHeaderView.setBackgroundResource(R.drawable.brand);
         //drawerHeaderParent.setBackgroundColor(Color.parseColor((currentTab==1 ? skinTwo : skin)));
         if (findViewById(R.id.tab_frame) != null) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN, mDrawerLinear);

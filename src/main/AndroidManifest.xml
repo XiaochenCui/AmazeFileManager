@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2014 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>
 
     This file is part of Amaze File Manager.
@@ -17,81 +15,91 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    -->
-
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xiaochen.videoplayer"
     android:versionCode="53"
     android:versionName="3.1.2 Beta 9">
 
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="25" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-sdk 
-        android:minSdkVersion="14" 
-        android:targetSdkVersion="25" />
-        
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
-    <application
-        android:name="com.xiaochen.videoplayer.utils.AppConfig"
-        android:icon="@mipmap/ic_launcher"
-        tools:replace="android:label"
-        android:label="Amaze">
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".utils.AppConfig"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Amaze"
+        tools:replace="android:label">
         <activity
+            android:name=".activities.MainActivity"
             android:label="VideoPlayer"
             android:launchMode="singleInstance"
-            android:name="com.xiaochen.videoplayer.activities.MainActivity"
             android:theme="@style/appCompatLight">
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+
                 <data android:mimeType="*/*" />
+
                 <category android:name="android.intent.category.OPENABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.RINGTONE_PICKER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <data android:mimeType="application/zip" />
                 <data android:mimeType="application/rar" />
-                <data android:mimeType="application/x-rar-compressed"/><!--<category android:name="android.intent.category.OPENABLE" />-->
+                <data android:mimeType="application/x-rar-compressed" /> <!-- <category android:name="android.intent.category.OPENABLE" /> -->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
         </activity>
-		<activity
-			android:uiOptions="splitActionBarWhenNarrow"
+        <activity
+            android:name=".activities.Preferences"
             android:label="@string/setting"
-            android:name="com.xiaochen.videoplayer.activities.Preferences"
-			android:theme="@style/appCompatLight">
-	    <intent-filter>
+            android:theme="@style/appCompatLight"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
 
+        <activity
+            android:name=".activities.EasyVideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
+
         <service
-			android:name = "com.xiaochen.videoplayer.services.CopyService"
-			android:label = "Copying"
-            >
-		</service>
+            android:name=".services.CopyService"
+            android:label="Copying"></service>
 
     </application>
 

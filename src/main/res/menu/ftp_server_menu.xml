@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/choose_ftp_port"
-        android:title="@string/ftp_port_edit_menu_title"/>
-    <item
-        android:id="@+id/ftp_path"
-        android:title="@string/ftp_path" />
-</menu>

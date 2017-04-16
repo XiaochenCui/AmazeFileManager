@@ -278,7 +278,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_settings_remote_white_48dp"
                 fab:fab_size="mini"
-                fab:fab_label="@string/smb_con" />
+                fab:fab_label="Test" />
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/menu_item3"
                 android:layout_width="wrap_content"
@@ -367,35 +367,6 @@
             android:background="@drawable/safr_ripple_white"
             android:clickable="true">
 
-            <ImageView
-                android:id="@+id/settingicon"
-                android:layout_width="24dp"
-                android:layout_height="48dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:src="@drawable/ic_settings_grey600_48dp"
-                android:contentDescription="@string/icon" />
-
-            <TextView
-                android:id="@+id/settingtext"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_toEndOf="@+id/settingicon"
-                android:layout_toRightOf="@+id/settingicon"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:text="@string/setting"
-                android:clickable="false"
-                android:textColor="@android:color/black"
-                android:gravity="center_vertical" />
         </RelativeLayout>
 
     </com.xiaochen.videoplayer.ui.views.ScrimInsetsRelativeLayout>

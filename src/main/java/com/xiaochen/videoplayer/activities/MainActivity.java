@@ -1652,17 +1652,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
                 floatingActionButton.close(true);
             }
         });
-        FloatingActionButton floatingActionButton3 = (FloatingActionButton) findViewById(R.id.menu_item2);
-        floatingActionButton3.setColorNormal(folderskin);
-        floatingActionButton3.setColorPressed(fabskinpressed);
-        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivityHelper.add(2);
-                utils.revealShow(fabBgView, false);
-                floatingActionButton.close(true);
-            }
-        });
+
         final FloatingActionButton floatingActionButton4 = (FloatingActionButton) findViewById(R.id.menu_item3);
         floatingActionButton4.setColorNormal(folderskin);
         floatingActionButton4.setColorPressed(fabskinpressed);

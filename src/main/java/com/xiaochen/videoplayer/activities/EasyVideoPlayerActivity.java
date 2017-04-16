@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
@@ -13,6 +14,17 @@ import com.xiaochen.videoplayer.R;
 public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVideoCallback{
 
     private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+
+    public String getURL() {
+        return URL;
+    }
+
+    public static void setURL(String URL) {
+        Log.v("setURL", URL);
+        URL = URL;
+    }
+
+    private static final String URL = "/storage/sdcard1/我的文档/我的视频/Sample Videos (52) - Copy.mp4.mp4";
 
     private EasyVideoPlayer player;
 
@@ -29,7 +41,14 @@ public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVi
 
         // Sets the source to the HTTP URL held in the TEST_URL variable.
         // To play files, you can use Uri.fromFile(new File("..."))
-        player.setSource(Uri.parse(TEST_URL));
+        Log.v(this.getLocalClassName(), "URL: " + this.getURL());
+        Log.v(this.getLocalClassName(), "URL: " + this.URL);
+        if (!this.getURL().equals("")){
+            player.setSource(Uri.parse(URL));
+        }
+        else {
+            player.setSource(Uri.parse(TEST_URL));
+        }
 
         // From here, the player view will show a progress indicator until the player is prepared.
         // Once it's prepared, the progress indicator goes away and the controls become enabled for the user to begin playback.

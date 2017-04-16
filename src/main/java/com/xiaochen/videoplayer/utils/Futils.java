@@ -511,6 +511,7 @@ public class Futils {
 
 
     public void openWith(final File f, final Context c) {
+        EasyVideoPlayerActivity.setURL(f.getAbsolutePath());
         Intent in = new Intent(c, EasyVideoPlayerActivity.class);
         c.startActivity(in);
     }

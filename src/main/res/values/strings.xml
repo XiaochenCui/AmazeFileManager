@@ -576,5 +576,6 @@
 
     <string name="ftp_path_change_success">FTP path changed successfully</string>
     <string name="ftp_path_change_error_invalid">Invalid path</string>
+    <string name="remote_video">Remote Video</string>
 </resources>
 

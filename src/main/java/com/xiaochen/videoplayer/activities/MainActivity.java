@@ -568,6 +568,7 @@ public class MainActivity extends BaseActivity implements OnRequestPermissionsRe
         list.add(new SectionItem());
 
         list.add(new EntryItem(getResources().getString(R.string.videos), "1", ContextCompat.getDrawable(this, R.drawable.ic_doc_video_am)));
+        list.add(new EntryItem(getResources().getString(R.string.remote_video), "2", ContextCompat.getDrawable(this, R.drawable.ic_doc_video_am)));
         DataUtils.setList(list);
         adapter = new DrawerAdapter(this, this, list, MainActivity.this, Sp);
         mDrawerList.setAdapter(adapter);

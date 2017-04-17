@@ -15,16 +15,17 @@ public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVi
 
     private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
 
+    private static String URL = "/storage/sdcard1/我的文档/我的视频/Sample Videos (52) - Copy.mp4.mp4";
+
     public String getURL() {
         return URL;
     }
 
-    public static void setURL(String URL) {
-        Log.v("setURL", URL);
-        URL = URL;
+    public static void setURL(String url) {
+        Log.v("setURL", url);
+        URL = url;
     }
 
-    private static final String URL = "/storage/sdcard1/我的文档/我的视频/Sample Videos (52) - Copy.mp4.mp4";
 
     private EasyVideoPlayer player;
 

@@ -46,10 +46,11 @@ public class Layoutelements implements Parcelable {
             header = false;
         } else {
             header = true;
-        } if (j == 0) {
+        }
+        if (j == 0) {
             isDirectory = false;
         } else {
-            isDirectory= true;
+            isDirectory = true;
         }
         // don't save bitmaps in parcel, it might exceed the allowed transaction threshold
         //Bitmap bitmap = (Bitmap) im.readParcelable(getClass().getClassLoader());
@@ -57,7 +58,7 @@ public class Layoutelements implements Parcelable {
         //imageId = new BitmapDrawable(bitmap);
         date1 = im.readString();
         size = im.readString();
-        longSize=im.readLong();
+        longSize = im.readLong();
     }
 
 
@@ -71,7 +72,7 @@ public class Layoutelements implements Parcelable {
         p1.writeString(desc);
         p1.writeString(permissions);
         p1.writeString(symlink);
-        p1.writeInt(isDirectory?1:0);
+        p1.writeInt(isDirectory ? 1 : 0);
         p1.writeLong(date);
         p1.writeInt(header ? 1 : 0);
         //p1.writeParcelable(imageId.getBitmap(), p2);
@@ -88,7 +89,7 @@ public class Layoutelements implements Parcelable {
     private String symlink;
     private String size;
     private boolean isDirectory;
-    private long date = 0,longSize=0;
+    private long date = 0, longSize = 0;
     private String date1 = "";
     private boolean header;
     //same as hfile.modes but different than openmode in Main.java
@@ -99,11 +100,19 @@ public class Layoutelements implements Parcelable {
         this.imageId = imageId;
         this.title = title;
         this.desc = desc;
-        this.permissions = permissions.trim();
-        this.symlink = symlink.trim();
+        if (permissions != null) {
+            this.permissions = permissions.trim();
+        } else {
+            this.permissions = "";
+        }
+        if (symlink != null) {
+            this.symlink = symlink.trim();
+        } else {
+            this.symlink = "";
+        }
         this.size = size;
         this.header = header;
-        this.longSize=longSize;
+        this.longSize = longSize;
         this.isDirectory = isDirectory;
         if (!date.trim().equals("")) {
             this.date = Long.parseLong(date);
@@ -126,7 +135,10 @@ public class Layoutelements implements Parcelable {
         return imageId;
     }
 
-    public void setImageId(BitmapDrawable imageId){this.imageId=imageId;}
+    public void setImageId(BitmapDrawable imageId) {
+        this.imageId = imageId;
+    }
+
     public String getDesc() {
         return desc.toString();
     }
@@ -149,7 +161,7 @@ public class Layoutelements implements Parcelable {
     }
 
     public BaseFile generateBaseFile() {
-        BaseFile baseFile=new BaseFile(getDesc(), getPermissions(), getDate1(), getlongSize(), isDirectory());
+        BaseFile baseFile = new BaseFile(getDesc(), getPermissions(), getDate1(), getlongSize(), isDirectory());
         baseFile.setMode(mode);
         baseFile.setName(title);
         return baseFile;

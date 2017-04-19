@@ -24,8 +24,12 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.xiaochen.videoplayer.activities.BaseActivity;
 import com.xiaochen.videoplayer.exceptions.RootNotPermittedException;
 import com.xiaochen.videoplayer.filesystem.BaseFile;
@@ -39,9 +43,21 @@ import com.xiaochen.videoplayer.utils.FileListSorter;
 import com.xiaochen.videoplayer.utils.OpenMode;
 import com.xiaochen.videoplayer.utils.provider.UtilitiesProviderInterface;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 
 public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements>> {
@@ -103,17 +119,22 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         switch (openmode) {
             case CUSTOM:
                 ArrayList<BaseFile> arrayList = null;
-                arrayList = (listVideos());
+                switch (Integer.parseInt(path)) {
+                    case 1:
+                        arrayList = (listVideos());
+                        path = "1";
+                        break;
+                    case 2:
+                        arrayList = (listRemoteVideos());
+                        path = "2";
+                        break;
+                }
                 try {
                     if (arrayList != null)
                         list = addTo(arrayList);
                     else return new ArrayList<>();
                 } catch (Exception e) {
                 }
-                break;
-            case OTG:
-                list = addTo(listOtg(path));
-                openmode = OpenMode.OTG;
                 break;
             default:
                 // we're neither in OTG not in SMB, load the list based on root/general filesystem
@@ -135,8 +156,6 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
                 break;
         }
 
-        if (list != null && !(openmode == OpenMode.CUSTOM && ((path).equals("5") || (path).equals("6"))))
-            Collections.sort(list, new FileListSorter(ma.dsort, ma.sortby, ma.asc, BaseActivity.rootMode));
         return list;
 
     }
@@ -217,6 +236,68 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         return songs;
     }
 
+    ArrayList<BaseFile> listRemoteVideos() {
+        ArrayList<BaseFile> baseFileArrayList = new ArrayList<>(10);
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
+        String response = "";
+        JSONObject jsonObject = null;
+
+        try {
+            URL url = new URL("http://121.42.62.137/files/video_list.json");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+
+            InputStream stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line+"\n");
+                Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+
+            }
+
+            response = buffer.toString();
+
+            jsonObject = new JSONObject(response);
+
+            Log.d("jsonObject: ", jsonObject.toString());
+
+            JSONArray videos = jsonObject.getJSONArray("videos");
+
+            for(int i=0; i<videos.length(); i++){
+                BaseFile baseFile = new BaseFile(videos.getJSONObject(i).getString("url"));
+                baseFileArrayList.add(baseFile);
+            }
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return baseFileArrayList;
+    }
     /**
      * Lists files from an OTG device
      * @param path the path to the directory tree, starts with prefix 'otg:/'

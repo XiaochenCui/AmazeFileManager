@@ -23,6 +23,10 @@ public class EasyVideoPlayerActivity extends AppCompatActivity implements EasyVi
 
     public static void setURL(String url) {
         Log.v("setURL", url);
+        if(url.startsWith("/http:/")){
+            url = "http://" + url.substring(7);
+        }
+        Log.v("setURL", url);
         URL = url;
     }
 

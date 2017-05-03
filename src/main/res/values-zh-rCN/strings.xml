@@ -546,4 +546,7 @@
   <string name="contributors_7_summary">启动交互式 shell</string>
   <string name="bytes">字节</string>
   <string name="remote_video">在线视频</string>
+  <string name="remote_video_anime">动漫</string>
+  <string name="remote_video_cs">计算机科学</string>
+  <string name="remote_video_lego">乐高</string>
 </resources>

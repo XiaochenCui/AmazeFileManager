@@ -68,23 +68,24 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
     Main ma;
     Context c;
     OpenMode openmode;
+
     public LoadList(Context c, UtilitiesProviderInterface utilsProvider, boolean back, Main ma, OpenMode openmode) {
         this.utilsProvider = utilsProvider;
         this.back = back;
         this.ma = ma;
         this.openmode = openmode;
-        this.c=c;
+        this.c = c;
     }
 
     @Override
     protected void onPreExecute() {
-        if (ma!=null && ma.mSwipeRefreshLayout!=null)
+        if (ma != null && ma.mSwipeRefreshLayout != null)
             ma.mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void onProgressUpdate(String... message) {
-        if(c!=null)
+        if (c != null)
             Toast.makeText(c, message[0], Toast.LENGTH_SHORT).show();
     }
 
@@ -125,8 +126,16 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
                         path = "1";
                         break;
                     case 2:
-                        arrayList = (listRemoteVideos());
+                        arrayList = (listRemoteVideos("anime"));
                         path = "2";
+                        break;
+                    case 3:
+                        arrayList = (listRemoteVideos("cs"));
+                        path = "3";
+                        break;
+                    case 4:
+                        arrayList = (listRemoteVideos("lego"));
+                        path = "4";
                         break;
                 }
                 try {
@@ -142,11 +151,11 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
                     ArrayList<BaseFile> arrayList1;
                     arrayList1 = RootHelper.getFilesList(path, BaseActivity.rootMode, ma.SHOW_HIDDEN,
                             new RootHelper.GetModeCallBack() {
-                        @Override
-                        public void getMode(OpenMode mode) {
-                            openmode = mode;
-                        }
-                    });
+                                @Override
+                                public void getMode(OpenMode mode) {
+                                    openmode = mode;
+                                }
+                            });
                     list = addTo(arrayList1);
 
                 } catch (RootNotPermittedException e) {
@@ -236,7 +245,7 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         return songs;
     }
 
-    ArrayList<BaseFile> listRemoteVideos() {
+    ArrayList<BaseFile> listRemoteVideos(String type) {
         ArrayList<BaseFile> baseFileArrayList = new ArrayList<>(10);
 
         HttpURLConnection connection = null;
@@ -246,7 +255,7 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         JSONObject jsonObject = null;
 
         try {
-            URL url = new URL("http://121.42.62.137/files/video_list.json");
+            URL url = new URL("http://121.42.62.137/files/" + type + "/video_list.json");
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
@@ -259,7 +268,7 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
             String line = "";
 
             while ((line = reader.readLine()) != null) {
-                buffer.append(line+"\n");
+                buffer.append(line + "\n");
                 Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
 
             }
@@ -272,8 +281,10 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
 
             JSONArray videos = jsonObject.getJSONArray("videos");
 
-            for(int i=0; i<videos.length(); i++){
-                BaseFile baseFile = new BaseFile(videos.getJSONObject(i).getString("url"));
+            for (int i = 0; i < videos.length(); i++) {
+                jsonObject = videos.getJSONObject(i);
+                BaseFile baseFile = new BaseFile(jsonObject.getString("url"));
+                baseFile.setName(jsonObject.getString("name"));
                 baseFileArrayList.add(baseFile);
             }
 
@@ -298,8 +309,10 @@ public class LoadList extends AsyncTask<String, String, ArrayList<Layoutelements
         }
         return baseFileArrayList;
     }
+
     /**
      * Lists files from an OTG device
+     *
      * @param path the path to the directory tree, starts with prefix 'otg:/'
      *             Independent of URI (or mount point) for the OTG
      * @return a list of files loaded
